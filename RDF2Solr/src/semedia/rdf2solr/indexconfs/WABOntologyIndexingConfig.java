@@ -12,7 +12,10 @@ public class WABOntologyIndexingConfig extends Configuration{
 	 * WAB configuration
 	 */
 	
-	
+	private static final String[] WAB_ENTITIES_BLACK_LIST = {"http://it.wikipedia.org/wiki/Comitato_Olimpico_Internazionale", "http://it.wikipedia.org/wiki/Cio_%28citt%C3%A0%29","http://it.wikipedia.org/wiki/ISO_639-3"};
+	private static final String WAB_SOLR_URL = "http://141.20.126.236:8080/solr-wab/"; 
+	private static ArrayList<String> WAB_TAGS_BLACK_LIST = new ArrayList<String>() {{ add("CIO"); add("ISO 639-3"); add("2C-B"); add("Annot"); add("ABMA"); add("Abio"); add("Chief Information Officer"); add("ABC"); add("Compagnia di intervento operativo");}};
+
 	private static final String WAB_SESAME_URL = "http://metasound.dibet.univpm.it:8080/openrdf-sesame/repositories/";
 	private static final String WAB_SESAME_REPOSITORY_NAME = "wab";
 	private static final String WAB_PREFIXES = "PREFIX scho:<http://purl.org/scho/ont/>\n" + 
@@ -41,6 +44,7 @@ public class WABOntologyIndexingConfig extends Configuration{
 		WAB_PREFIXES + "select distinct ?uri ?field ?value where {GRAPH <http://wab.uib.no/ontology> { ?uri rdf:type scho:SecondarySource. ?uri ?f ?v. ?v rdfs:label ?value. ?f rdfs:label ?field. }}",
 		WAB_PREFIXES + "select distinct ?uri ?field ?value where {GRAPH <http://wab.uib.no/ontology> { ?uri rdf:type :Bemerkung. ?uri ?field ?value. FILTER (isLiteral(?value)) }}",
 		WAB_PREFIXES + "select distinct ?uri ?field ?value where {GRAPH <http://wab.uib.no/ontology> { ?uri rdf:type :Bemerkung. ?uri ?f ?v. ?v rdfs:label ?value. ?f rdfs:label ?field. }}"
+		
 //		WAB_PREFIXES + "select distinct ?uri ?field ?value where {?notebook rdf:type <http://purl.org/pundit/ont/ao#Notebook>. ?notebook rdfs:label ?label. FILTER (regex(str(?label),'WAB','i')) ?notebook dcterms:creator ?author. ?notebook <http://purl.org/pundit/ont/ao#includes> ?annotation. ?annotation <http://www.openannotation.org/ns/hasBody> ?graph. ?annotation <http://purl.org/pundit/ont/ao#items> ?items. \n" + 
 //				"GRAPH ?graph {\n" + 
 //				"    ?frag ?f ?v.\n" + 
@@ -76,13 +80,10 @@ public class WABOntologyIndexingConfig extends Configuration{
 		WAB_FACET_QUERIES.put("facet_type_ss", WAB_PREFIXES + "select distinct ?uri ?value where  {GRAPH <http://wab.uib.no/ontology> { ?uri rdf:type ?type.?type rdfs:label ?value. FILTER (?type = scho:SecondarySource || ?type = :Bemerkung) FILTER ( (LANG(?value)='en') || (LANG(?value)='') ) }}");
 
 	}
-	
-	private static final String[] WAB_ENTITIES_BLACK_LIST = {"http://it.wikipedia.org/wiki/Comitato_Olimpico_Internazionale", "http://it.wikipedia.org/wiki/Cio_%28citt%C3%A0%29","http://it.wikipedia.org/wiki/ISO_639-3"};
-	private static ArrayList<String> WAB_TAGS_BLACK_LIST = new ArrayList<String>() {{ add("CIO"); add("ISO 639-3"); add("2C-B"); add("Annot"); add("ABMA"); add("Abio"); add("Chief Information Officer"); add("ABC"); add("Compagnia di intervento operativo");}};
 
 	public WABOntologyIndexingConfig() {
 		
-		super("http://metasound.dibet.univpm.it:8080/solr-wab/", WAB_SESAME_URL, WAB_SESAME_REPOSITORY_NAME, WAB_PREFIXES,
+		super(WAB_SOLR_URL, WAB_SESAME_URL, WAB_SESAME_REPOSITORY_NAME, WAB_PREFIXES,
 				WAB_INDEXING_QUERIES, WAB_FACET_QUERIES, WAB_ENTITIES_BLACK_LIST, WAB_TAGS_BLACK_LIST);
 
 	}

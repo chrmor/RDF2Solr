@@ -6,7 +6,8 @@ public class DM2EIndexingConfiguration extends Configuration {
 	/**
 	 * DM2E configuration
 	 */
-	private static final String DM2E_SOLR_SERVER = "http://metasound.dibet.univpm.it:8080/solr-dm2e/";
+	//private static final String DM2E_SOLR_SERVER = "http://metasound.dibet.univpm.it:8080/solr-dm2e/";
+	private static final String DM2E_SOLR_SERVER = "http://141.20.126.236:8080/solr-dm2e/";
 	private static final String DM2E_SESAME_URL = "http://localhost:9997/";
 	private static final String DM2E_SESAME_REPOSITORY_NAME = "dm2e-direct/sparql";
 	private static final String DM2E_PREFIXES = "PREFIX edm:<http://www.europeana.eu/schemas/edm/>" +
