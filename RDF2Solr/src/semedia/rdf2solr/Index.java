@@ -27,6 +27,7 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.http.HTTPRepository;
 
 import semedia.rdf2solr.indexconfs.Configuration;
+import semedia.rdf2solr.indexconfs.DM2EIndexingConfiguration;
 import semedia.rdf2solr.indexconfs.WABOntologyIndexingConfig;
 
 public class Index {
@@ -36,6 +37,7 @@ public class Index {
 	//private static final String AJAX_SOLR_CONF_JS = "/Users/christianmorbidoni/ajax-solr-master/examples/rdf/js/reuters.js";
 	//private static final String AJAX_SOLR_CONF_HTML = "/Users/christianmorbidoni/ajax-solr-master/examples/rdf/index.html";
 
+	private static final int MAX_LENGTH_FIELDS = 4000;
 	private Configuration configuration;
 	private SolrServer server;
 	private Repository rep;
@@ -63,7 +65,7 @@ public class Index {
 	
 	public static void main(String[] args) throws RepositoryException, QueryEvaluationException, MalformedQueryException, IOException, SolrServerException {
 
-		Configuration conf = new WABOntologyIndexingConfig();
+		Configuration conf = new DM2EIndexingConfiguration();
 		Index index = new Index(conf);
 		//Index index = new Index(WAB_CONFIGURATION);
 		index.resetSolrIndex();
@@ -211,6 +213,10 @@ public class Index {
 				val = valval.stringValue();
 			}
 			
+			if (val.length() > MAX_LENGTH_FIELDS) {
+				val = val.substring(0, MAX_LENGTH_FIELDS) + "...";
+			}
+			
 			System.out.println(uri + " " + field + " " + val);
 			
 			SolrInputDocument doc;
@@ -236,6 +242,8 @@ public class Index {
 				// store the doc in the buffer ...
 				solrDocs.put(normalizeWWWUri(uri), doc);
 			}
+			
+			
 			
 			// The text field ha a special meaning: it contains text for the full text index.
 			if (field.equals("text")) {

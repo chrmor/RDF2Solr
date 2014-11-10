@@ -40,7 +40,54 @@ public class DM2EIndexingConfiguration extends Configuration {
 			"PREFIX j.2:<http://example.org/>" +
 			"PREFIX j.3:<http://example.org/>";
 	
+	
+	private static final String namedGraphsFilter = "FILTER ("
+											+ "?g = <http://data.dm2e.eu/data/dataset/nli/manuscripts/20141015123629962> || " 
+											+ "?g = <http://data.dm2e.eu/data/dataset/sbb/kpe_DE-1a_995/20140908183450392> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/mpiwg/ismi/20141023164116478> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140829133247065> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20141007162514171> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140908184105626> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20141007122653391> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/bbaw/dta/20140829221549669> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/uber/dingler/20140909215957962> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/onb/codices/20140829133659854> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/sbb/manumed/20140908183243860> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/ub-ffm/mshebr/20140829145221395> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/bas/codsupra/20140910165705363> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140830013040893> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/sbb/kpe_DE-Ha179_37172/20140908183432110> || "
+											+ "?g = <http://data.dm2e.eu/data/dataset/sbb/kpe_DE-1a_8535/20140908183508838>"
+										+ ")";
+	    
+
+	
 	private static final String[] DM2E_INDEXING_QUERIES = {
+
+		"    select distinct ?uri ?field ?value where {\n" + 
+			    "        graph ?g {\n" +
+			    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
+			    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" +  
+			    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>. \n" + 
+			    "            ?uri <http://purl.org/dc/elements/1.1/type> ?dc_type .\n" + 
+			    "            FILTER (\n" + 
+			    "                ?dc_type = <http://purl.org/ontology/bibo/Journal>\n" + 
+			    "                ||\n" + 
+			    "                ?dc_type = <http://purl.org/ontology/bibo/Issue>\n" + 
+			    "                ||\n" + 
+			    "                ?dc_type = <http://purl.org/ontology/bibo/Letter>\n" + 
+			    "                ||\n" + 
+			    "                ?dc_type = <http://purl.org/ontology/bibo/Book>\n" + 
+			    "                ||\n" + 
+			    "                ?dc_type = <http://purl.org/ontology/bibo/Journal>\n" + 
+			    "                ||\n" + 
+			    "                ?dc_type = <http://onto.dm2e.eu/schemas/dm2e/Manuscript>\n" + 
+			    "            )\n" + 
+			    "            ?uri ?field ?v. \n" + 
+			    "            ?v <http://www.w3.org/2000/01/rdf-schema#label> ?value.\n" + 
+			    "        }\n" +
+			    		 namedGraphsFilter + 
+			    "    }\n",	
     "    select distinct ?uri ?field ?value where {\n" + 
     "        graph ?g {\n" +
     "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
@@ -63,15 +110,7 @@ public class DM2EIndexingConfiguration extends Configuration {
     "            ?uri ?field ?v. \n" + 
     "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n" + 
     "        }\n" +
-    "		 FILTER (?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140301021526607> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20140306195409535> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20140303175001587> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rarafulltextsample/20140305163700648> || \n" + 
-//    "            ?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140306154239247> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/onb/codices/20140304184952678> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/ub-ffm/sammlungen/20140301004538912> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uber/dingler/20140306153350082> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140307191021384>)" + 
+    		 namedGraphsFilter + 
     "    }\n",
     
     "            \n" + 
@@ -97,15 +136,7 @@ public class DM2EIndexingConfiguration extends Configuration {
     "            ?uri ?field ?value.\n" + 
     "            FILTER (isLiteral(?value))\n" + 
     "        }\n" +
-    "		 FILTER (?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140301021526607> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20140306195409535> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20140303175001587> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rarafulltextsample/20140305163700648> || \n" + 
-//    "            ?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140306154239247> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/onb/codices/20140304184952678> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/ub-ffm/sammlungen/20140301004538912> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uber/dingler/20140306153350082> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140307191021384>)" + 
+    		namedGraphsFilter + 
     "    }       \n", 
      
     "    select distinct ?uri ?field ?value where {\n" + 
@@ -129,19 +160,35 @@ public class DM2EIndexingConfiguration extends Configuration {
     "            )\n" + 
     "            ?uri ?field ?value.\n" + 
     "            FILTER (!isLiteral(?value))\n" + 
-    "            FILTER NOT EXISTS {?value <http://www.w3.org/2004/02/skos/core#prefLabel> ?label}\n" + 
+    "            FILTER NOT EXISTS {?value <http://www.w3.org/2004/02/skos/core#prefLabel> ?label}\n" +
+    "            FILTER NOT EXISTS {?value <http://www.w3.org/2000/01/rdf-schema#label> ?label}\n" +
     "        }\n" +
-    "		 FILTER (?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140301021526607> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20140306195409535> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20140303175001587> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rarafulltextsample/20140305163700648> || \n" + 
- //   "            ?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140306154239247> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/onb/codices/20140304184952678> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/ub-ffm/sammlungen/20140301004538912> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uber/dingler/20140306153350082> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140307191021384>)" + 
+    		namedGraphsFilter + 
     "    }       \n", 
-    
+    "    select distinct ?uri ?field ?value where {\n" + 
+    	    "        graph ?g {\n" +
+    	    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
+    	    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" + 
+    	    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>.\n" + 
+    	    "            ?uri <http://purl.org/dc/elements/1.1/type> ?dc_type .\n" + 
+    	    "            FILTER (\n" + 
+    	    "                ?dc_type = <http://purl.org/ontology/bibo/Journal>\n" + 
+    	    "                ||\n" + 
+    	    "                ?dc_type = <http://purl.org/ontology/bibo/Issue>\n" + 
+    	    "                ||\n" + 
+    	    "                ?dc_type = <http://purl.org/ontology/bibo/Letter>\n" + 
+    	    "                ||\n" + 
+    	    "                ?dc_type = <http://purl.org/ontology/bibo/Book>\n" + 
+    	    "                ||\n" + 
+    	    "                ?dc_type = <http://purl.org/ontology/bibo/Journal>\n" + 
+    	    "                ||\n" + 
+    	    "                ?dc_type = <http://onto.dm2e.eu/schemas/dm2e/Manuscript>\n" + 
+    	    "            )\n" + 
+    	    "            ?agg ?field ?v. \n" + 
+    	    "            ?v <http://www.w3.org/2000/01/rdf-schema#label> ?value.\n" + 
+    	    "        }\n" +
+    	    		namedGraphsFilter + 
+    	    "    }\n", 
     "    select distinct ?uri ?field ?value where {\n" + 
     "        graph ?g {\n" +
     "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
@@ -164,15 +211,7 @@ public class DM2EIndexingConfiguration extends Configuration {
     "            ?agg ?field ?v. \n" + 
     "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n" + 
     "        }\n" +
-    "		 FILTER (?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140301021526607> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20140306195409535> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20140303175001587> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rarafulltextsample/20140305163700648> || \n" + 
- //   "            ?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140306154239247> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/onb/codices/20140304184952678> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/ub-ffm/sammlungen/20140301004538912> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uber/dingler/20140306153350082> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140307191021384>)" + 
+    		namedGraphsFilter + 
     "    }\n", 
     
     "    select distinct ?uri ?field ?value where {\n" + 
@@ -197,15 +236,7 @@ public class DM2EIndexingConfiguration extends Configuration {
     "            ?agg ?field ?value.\n" + 
     "            FILTER (isLiteral(?value))\n" + 
     "        }\n" +
-    "		 FILTER (?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140301021526607> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20140306195409535> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20140303175001587> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rarafulltextsample/20140305163700648> || \n" + 
- //   "            ?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140306154239247> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/onb/codices/20140304184952678> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/ub-ffm/sammlungen/20140301004538912> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uber/dingler/20140306153350082> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140307191021384>)" + 
+    		namedGraphsFilter + 
     "    }\n", 
     
     "    select distinct ?uri ?field ?value where {\n" + 
@@ -229,17 +260,10 @@ public class DM2EIndexingConfiguration extends Configuration {
     "            )\n" + 
     "            ?agg ?field ?value.\n" + 
     "            FILTER (!isLiteral(?value))\n" + 
-    "            FILTER NOT EXISTS {?value <http://www.w3.org/2004/02/skos/core#prefLabel> ?label}\n" + 
+    "            FILTER NOT EXISTS {?value <http://www.w3.org/2004/02/skos/core#prefLabel> ?label}\n" +
+    "            FILTER NOT EXISTS {?value <http://www.w3.org/2000/01/rdf-schema#label> ?label}\n" +
     "        }\n" +
-    "		 FILTER (?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140301021526607> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20140306195409535> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20140303175001587> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rarafulltextsample/20140305163700648> || \n" + 
-//    "            ?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140306154239247> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/onb/codices/20140304184952678> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/ub-ffm/sammlungen/20140301004538912> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uber/dingler/20140306153350082> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140307191021384>)" + 
+    		namedGraphsFilter + 
     "    }\n", 
     
     "    select distinct ?uri ?value {\n" + 
@@ -263,15 +287,7 @@ public class DM2EIndexingConfiguration extends Configuration {
     "                )\n" + 
     "                ?uri <http://purl.org/dc/elements/1.1/title> ?value.\n" + 
     "            }\n" +
-    "			 FILTER (?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140301021526607> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20140306195409535> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20140303175001587> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rarafulltextsample/20140305163700648> || \n" + 
-//    "            ?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140306154239247> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/onb/codices/20140304184952678> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/ub-ffm/sammlungen/20140301004538912> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uber/dingler/20140306153350082> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140307191021384>)" + 
+    			namedGraphsFilter + 
     "    }\n", 
     
     "    select distinct ?uri ?value {\n" + 
@@ -295,15 +311,7 @@ public class DM2EIndexingConfiguration extends Configuration {
     "                )\n" + 
     "                ?uri <http://onto.dm2e.eu/schemas/dm2e/subtitle> ?value.\n" + 
     "            }\n" +
-    "			 FILTER (?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140301021526607> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20140306195409535> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20140303175001587> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rarafulltextsample/20140305163700648> || \n" + 
-//    "            ?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140306154239247> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/onb/codices/20140304184952678> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/ub-ffm/sammlungen/20140301004538912> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uber/dingler/20140306153350082> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140307191021384>)" + 
+    			namedGraphsFilter + 
     "    }\n", 
     
     "    select distinct ?uri ?value {\n" + 
@@ -327,15 +335,7 @@ public class DM2EIndexingConfiguration extends Configuration {
     "                )\n" + 
     "                ?uri <http://purl.org/dc/elements/1.1/description> ?value.\n" + 
     "            }\n" +
-    "			 FILTER (?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140301021526607> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20140306195409535> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20140303175001587> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rarafulltextsample/20140305163700648> || \n" + 
-//    "            ?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140306154239247> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/onb/codices/20140304184952678> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/ub-ffm/sammlungen/20140301004538912> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uber/dingler/20140306153350082> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140307191021384>)" + 
+    				namedGraphsFilter + 
     "    }\n", 
     
     "    select distinct ?uri ?value {\n" + 
@@ -359,15 +359,7 @@ public class DM2EIndexingConfiguration extends Configuration {
     "                )\n" + 
     "                ?uri <http://onto.dm2e.eu/schemas/dm2e/cover> ?value.\n" + 
     "            }\n" +
-    "			 FILTER (?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140301021526607> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20140306195409535> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20140303175001587> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/mpiwg/rarafulltextsample/20140305163700648> || \n" + 
-//    "            ?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140306154239247> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/onb/codices/20140304184952678> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/ub-ffm/sammlungen/20140301004538912> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uber/dingler/20140306153350082> || \n" + 
-    "            ?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140307191021384>)" + 
+    				namedGraphsFilter + 
     "    }"};
 	
 	/*

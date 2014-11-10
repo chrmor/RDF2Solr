@@ -12,12 +12,11 @@ public class WABOntologyIndexingConfig extends Configuration{
 	 * WAB configuration
 	 */
 	
-	private static final String[] WAB_ENTITIES_BLACK_LIST = {"http://it.wikipedia.org/wiki/Comitato_Olimpico_Internazionale", "http://it.wikipedia.org/wiki/Cio_%28citt%C3%A0%29","http://it.wikipedia.org/wiki/ISO_639-3"};
-	private static final String WAB_SOLR_URL = "http://141.20.126.236:8080/solr-wab/"; 
-	private static ArrayList<String> WAB_TAGS_BLACK_LIST = new ArrayList<String>() {{ add("CIO"); add("ISO 639-3"); add("2C-B"); add("Annot"); add("ABMA"); add("Abio"); add("Chief Information Officer"); add("ABC"); add("Compagnia di intervento operativo");}};
-
+	private static final String[] WAB_ENTITIES_BLACK_LIST = {};
 	private static final String WAB_SESAME_URL = "http://metasound.dibet.univpm.it:8080/openrdf-sesame/repositories/";
 	private static final String WAB_SESAME_REPOSITORY_NAME = "wab";
+	private static final String WAB_SOLR_URL = "http://141.20.126.236:8080/solr-wab/"; 
+	private static ArrayList<String> WAB_TAGS_BLACK_LIST = new ArrayList<String>() {};	
 	private static final String WAB_PREFIXES = "PREFIX scho:<http://purl.org/scho/ont/>\n" + 
 			"PREFIX :<http://purl.org/wittgensteinsource/ont/>\n" + 
 			"PREFIX xsl:<http://www.w3.org/1999/XSL/Transform>\n" + 
@@ -34,6 +33,7 @@ public class WABOntologyIndexingConfig extends Configuration{
 			"PREFIX owl:<http://www.w3.org/2002/07/owl#>\n" + 
 			"PREFIX swrlb:<http://www.w3.org/2003/11/swrlb#>\n" + 
 			"PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
+	
 	private static final String[] WAB_INDEXING_QUERIES = {
 		
 		//Brown book only query
