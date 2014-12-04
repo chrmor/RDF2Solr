@@ -24,10 +24,12 @@ public class Configuration {
 	private String[] entities_black_list;
 	private ArrayList<String> tags_black_list;
 	private HashMap<String, String> facetQueries;
+	private boolean useUrisAsIds;
+	private boolean resetIndex;  
 	
 	public Configuration(String solr_server, String sesame_url, String sesame_repository_name, 
 			String prefixes, String[] indexing_queries, HashMap<String, String> facetsQueries, String[] entities_black_list, 
-			ArrayList<String> tags_black_list) {
+			ArrayList<String> tags_black_list, boolean useUrisAsIds, boolean resetIndex) {
 		
 		this.solr_server = solr_server;
 		this.sesame_url = sesame_url;
@@ -37,6 +39,8 @@ public class Configuration {
 		this.facetQueries = facetsQueries;
 		this.entities_black_list = entities_black_list;
 		this.tags_black_list = tags_black_list;
+		this.useUrisAsIds = useUrisAsIds;
+		this.resetIndex = resetIndex;
 		
 	}
 	
@@ -103,6 +107,11 @@ public class Configuration {
 	public void setFacetQueries(HashMap<String, String> facetQueries) {
 		this.facetQueries = facetQueries;
 	}
-	
+	public boolean getUseUrisAsIds() {
+		return useUrisAsIds;
+	}
+	public boolean getResetIndex() {
+		return resetIndex;
+	}
 
 }
