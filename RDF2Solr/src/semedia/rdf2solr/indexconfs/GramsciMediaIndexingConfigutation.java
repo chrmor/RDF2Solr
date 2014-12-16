@@ -5,9 +5,9 @@ import java.util.HashMap;
 
 public class GramsciMediaIndexingConfigutation  extends Configuration{
 
-	private static final String GRAMSCI_SOLR_SERVER = "http://localhost:8983/solr/";
+	// private static final String GRAMSCI_SOLR_SERVER = "http://localhost:8983/solr/";
 	// private static final String GRAMSCI_SOLR_SERVER = "http://metasound.dibet.univpm.it:8080/solr-gramsci-dictionary/";	
-	// private static final String GRAMSCI_SOLR_SERVER = "http://gramsciproject.org:8080/solr-gramsci-dictionary/";
+	private static final String GRAMSCI_SOLR_SERVER = "http://gramsciproject.org:8080/solr-gramsci-media/";
 		
 	private static final String GRAMSCI_SESAME_URL = "http://gramsciproject.org:8080/openrdf-sesame/repositories/";	
 	private static final String GRAMSCI_SESAME_REPOSITORY_NAME = "gramsci-native";
@@ -40,6 +40,7 @@ public class GramsciMediaIndexingConfigutation  extends Configuration{
 	
 	static {
 		GRAMSCI_FACET_QUERIES.put("title_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dct:title ?value. }");
+		GRAMSCI_FACET_QUERIES.put("description_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dc:description ?value. }");
 		GRAMSCI_FACET_QUERIES.put("type_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dc:type ?value. }");
 		GRAMSCI_FACET_QUERIES.put("ctype_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri edm:type ?value. }");
 		GRAMSCI_FACET_QUERIES.put("language_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dct:language ?value. }");
