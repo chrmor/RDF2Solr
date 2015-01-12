@@ -28,6 +28,7 @@ import org.openrdf.repository.http.HTTPRepository;
 
 import semedia.rdf2solr.indexconfs.Configuration;
 import semedia.rdf2solr.indexconfs.DM2EIndexingConfiguration;
+import semedia.rdf2solr.indexconfs.GramsciMediaIndexingConfigutation;
 import semedia.rdf2solr.indexconfs.WABOntologyIndexingConfig;
 
 public class Index {
@@ -65,7 +66,8 @@ public class Index {
 	
 	public static void main(String[] args) throws RepositoryException, QueryEvaluationException, MalformedQueryException, IOException, SolrServerException {
 
-		Configuration conf = new DM2EIndexingConfiguration();
+		//Configuration conf = new DM2EIndexingConfiguration();
+		Configuration conf = new GramsciMediaIndexingConfigutation();
 		Index index = new Index(conf);
 		//Index index = new Index(WAB_CONFIGURATION);
 		index.resetSolrIndex();
@@ -97,47 +99,43 @@ public class Index {
 
 	}
 	
-	public void doIndex() throws RepositoryException, MalformedQueryException, QueryEvaluationException, SolrServerException, IOException {
+	public void doIndex() throws RepositoryException, MalformedQueryException, QueryEvaluationException, SolrServerException, IOException {		
+				
+		RepositoryConnection conn = rep.getConnection();
 		
-				
-				RepositoryConnection conn = rep.getConnection();
-				
-				for (String q : configuration.getIndexing_queries()) {
-					System.out.println("Query:\n" + q);
-					indexByQuery(q, conn, solrDocs, "text");
-				}
-				
-				if (configuration.getFacetQueries() != null) {
-					for (String field : configuration.getFacetQueries().keySet()) {
-						String q = configuration.getFacetQueries().get(field);
-						System.out.println("Facet Query for field :\n" + field + "\n" + q);
-						indexByQuery(q, conn, solrDocs, field);
+		for (String q : configuration.getIndexing_queries()) {
+			System.out.println("Query:\n" + q);
+			indexByQuery(q, conn, solrDocs, "text");
+		}
+		
+		if (configuration.getFacetQueries() != null) {
+			for (String field : configuration.getFacetQueries().keySet()) {
+				String q = configuration.getFacetQueries().get(field);
+				System.out.println("Facet Query for field :\n" + field + "\n" + q);
+				indexByQuery(q, conn, solrDocs, field);
+			}
+		}
+		
+		//Add missing text fields to indexed documents. This is needed to appropriately display them in Ajax-Solr
+		for (SolrInputDocument doc : solrDocs.values()) {
+			if (doc.getField("text") == null) {
+				String uri = (String)doc.getField("uri_ss").getValue();
+				//if (uri.contains("wittgensteinsource.org")) {
+				if (false) {
+					String sigla = uri.split("/")[uri.split("/").length - 1];
+					String escSigla = URLEncoder.encode(sigla,"UTF-8");
+					uri = uri.replace(sigla, escSigla);
+					String text = getNoteText(uri);
+					if (text != null) {
+						text = text.replaceAll("\t", "");
+						doc.setField("text", text, 1.0f);	
 					}
-				}
-				
-				//Add missing text fields to indexed documents. This is needed to appropriately display them in Ajax-Solr
-				for (SolrInputDocument doc : solrDocs.values()) {
-					if (doc.getField("text") == null) {
-						String uri = (String)doc.getField("uri_ss").getValue();
-						//if (uri.contains("wittgensteinsource.org")) {
-						if (false) {
-							String sigla = uri.split("/")[uri.split("/").length - 1];
-							String escSigla = URLEncoder.encode(sigla,"UTF-8");
-							uri = uri.replace(sigla, escSigla);
-							String text = getNoteText(uri);
-							if (text != null) {
-								text = text.replaceAll("\t", "");
-								doc.setField("text", text, 1.0f);	
-							}
-							
-						} else {
-							doc.setField("text", "NO DESCRIPTION AVAILABLE FOR THIS ITEM");	
-						}
-						
-					}
-				}
-				
-
+					
+				} else {
+					doc.setField("text", "NO DESCRIPTION AVAILABLE FOR THIS ITEM");	
+				}				
+			}
+		}
 	}
 	
 	/**
