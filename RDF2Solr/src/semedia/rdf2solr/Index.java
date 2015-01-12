@@ -9,9 +9,11 @@ import java.util.HashMap;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
@@ -28,7 +30,8 @@ import org.openrdf.repository.http.HTTPRepository;
 
 import semedia.rdf2solr.indexconfs.Configuration;
 import semedia.rdf2solr.indexconfs.DM2EIndexingConfiguration;
-import semedia.rdf2solr.indexconfs.GramsciMediaIndexingConfigutation;
+import semedia.rdf2solr.indexconfs.DM2EVMIndexingConfiguration;
+import semedia.rdf2solr.indexconfs.GramsciDictionaryIndexingConfigutation;
 import semedia.rdf2solr.indexconfs.WABOntologyIndexingConfig;
 
 public class Index {
@@ -43,6 +46,7 @@ public class Index {
 	private SolrServer server;
 	private Repository rep;
 	private HashMap<String, SolrInputDocument> solrDocs;
+	private int startingIndex = 0; 
 	
 	public Index(Configuration configuration) {
 		this.solrDocs = new HashMap<String, SolrInputDocument>();
@@ -66,11 +70,26 @@ public class Index {
 	
 	public static void main(String[] args) throws RepositoryException, QueryEvaluationException, MalformedQueryException, IOException, SolrServerException {
 
+		Configuration conf = new DM2EVMIndexingConfiguration();
 		//Configuration conf = new DM2EIndexingConfiguration();
-		Configuration conf = new GramsciMediaIndexingConfigutation();
+		
+		//Configuration conf = new GramsciDictionaryIndexingConfigutation();
 		Index index = new Index(conf);
 		//Index index = new Index(WAB_CONFIGURATION);
-		index.resetSolrIndex();
+		if (index.configuration.getResetIndex()) {
+			index.resetSolrIndex();
+		}
+		
+//		SolrQuery query = new SolrQuery();
+//		SolrDocumentList res;
+//		do {
+//			query.setQuery( "id:" + index.startingIndex );
+//		    res = index.server.query( query ).getResults();
+//		    index.startingIndex++;
+//		} while (!res.isEmpty());
+		
+	    
+	    
 		System.out.println("Building index...");
 		index.doIndex();
 		System.out.println("Index built.");
@@ -99,43 +118,46 @@ public class Index {
 
 	}
 	
-	public void doIndex() throws RepositoryException, MalformedQueryException, QueryEvaluationException, SolrServerException, IOException {		
+	public void doIndex() throws RepositoryException, MalformedQueryException, QueryEvaluationException, SolrServerException, IOException {
+		
+				RepositoryConnection conn = rep.getConnection();
 				
-		RepositoryConnection conn = rep.getConnection();
-		
-		for (String q : configuration.getIndexing_queries()) {
-			System.out.println("Query:\n" + q);
-			indexByQuery(q, conn, solrDocs, "text");
-		}
-		
-		if (configuration.getFacetQueries() != null) {
-			for (String field : configuration.getFacetQueries().keySet()) {
-				String q = configuration.getFacetQueries().get(field);
-				System.out.println("Facet Query for field :\n" + field + "\n" + q);
-				indexByQuery(q, conn, solrDocs, field);
-			}
-		}
-		
-		//Add missing text fields to indexed documents. This is needed to appropriately display them in Ajax-Solr
-		for (SolrInputDocument doc : solrDocs.values()) {
-			if (doc.getField("text") == null) {
-				String uri = (String)doc.getField("uri_ss").getValue();
-				//if (uri.contains("wittgensteinsource.org")) {
-				if (false) {
-					String sigla = uri.split("/")[uri.split("/").length - 1];
-					String escSigla = URLEncoder.encode(sigla,"UTF-8");
-					uri = uri.replace(sigla, escSigla);
-					String text = getNoteText(uri);
-					if (text != null) {
-						text = text.replaceAll("\t", "");
-						doc.setField("text", text, 1.0f);	
+				for (String q : configuration.getIndexing_queries()) {
+					System.out.println("Query:\n" + q);
+					indexByQuery(q, conn, solrDocs, "text");
+				}
+				
+				if (configuration.getFacetQueries() != null) {
+					for (String field : configuration.getFacetQueries().keySet()) {
+						String q = configuration.getFacetQueries().get(field);
+						System.out.println("Facet Query for field :\n" + field + "\n" + q);
+						indexByQuery(q, conn, solrDocs, field);
 					}
-					
-				} else {
-					doc.setField("text", "NO DESCRIPTION AVAILABLE FOR THIS ITEM");	
-				}				
-			}
-		}
+				}
+				
+				//Add missing text fields to indexed documents. This is needed to appropriately display them in Ajax-Solr
+				for (SolrInputDocument doc : solrDocs.values()) {
+					if (doc.getField("text") == null) {
+						String uri = (String)doc.getField("uri_ss").getValue();
+						//if (uri.contains("wittgensteinsource.org")) {
+						if (false) {
+							String sigla = uri.split("/")[uri.split("/").length - 1];
+							String escSigla = URLEncoder.encode(sigla,"UTF-8");
+							uri = uri.replace(sigla, escSigla);
+							String text = getNoteText(uri);
+							if (text != null) {
+								text = text.replaceAll("\t", "");
+								doc.setField("text", text, 1.0f);	
+							}
+							
+						} else {
+							doc.setField("text", "NO DESCRIPTION AVAILABLE FOR THIS ITEM");	
+						}
+						
+					}
+				}
+				
+
 	}
 	
 	/**
@@ -153,14 +175,13 @@ public class Index {
 	 * @throws QueryEvaluationException
 	 * @throws MalformedURLException
 	 * @throws IOException
+	 * @throws SolrServerException 
 	 */
-	private void indexByQuery(String query, RepositoryConnection conn, HashMap<String, SolrInputDocument> solrDocs, String defaultField) throws RepositoryException, MalformedQueryException, QueryEvaluationException, MalformedURLException, IOException {
+	private void indexByQuery(String query, RepositoryConnection conn, HashMap<String, SolrInputDocument> solrDocs, String defaultField) throws RepositoryException, MalformedQueryException, QueryEvaluationException, MalformedURLException, IOException, SolrServerException {
 	
 		// Execute the query ....
 		TupleQuery tquery = conn.prepareTupleQuery(QueryLanguage.SPARQL, query);
 		TupleQueryResult res = tquery.evaluate();
-		
-		int id = 0;
 		
 		// foreach result
 		while (res.hasNext()) {
@@ -200,11 +221,11 @@ public class Index {
 			String val;
 			// If the value is not a RDF resource we skip some unwanted chars
 			if (valval instanceof Resource) {
-				if (valval.stringValue().contains("wittgensteinsource.org") || uri.contains("wittgensteinsource.org")) {
-					val = truncate(valval.stringValue()).replace("_n", "").replace("_d","");		
-				} else {
+//				if (valval.stringValue().contains("wittgensteinsource.org") || uri.contains("wittgensteinsource.org")) {
+//					val = truncate(valval.stringValue()).replace("_n", "").replace("_d","");		
+//				} else {
 					val = valval.stringValue();		
-				}
+				//}
 				
 			} else {
 				//val = valval.stringValue().replaceAll("\\[", "").replaceAll("\\]", "");
@@ -218,14 +239,33 @@ public class Index {
 			System.out.println(uri + " " + field + " " + val);
 			
 			SolrInputDocument doc;
-			// Check if the document already exists. In this case add fields to the existinf document...
+			// Check if the document already exists. In this case add fields to the existing document...
 			if (solrDocs.containsKey(normalizeWWWUri(uri))) {
 				doc = solrDocs.get(normalizeWWWUri(uri));
 			} else {
 				// Create a new document
 				doc = new SolrInputDocument();
 				// Assign an incremental ID ...
-				doc.addField("id", id++);
+				
+//				SolrQuery solrQuery = new SolrQuery();
+//				SolrDocumentList solrRes;
+//				solrQuery.setQuery( "uri_ss:\"" + normalizeWWWUri(uri) + "\"");
+//				solrRes = server.query( solrQuery ).getResults();
+//				if (solrRes.isEmpty()) {
+//					doc.addField("id", id++);	
+//				} else {
+//					int existingId = Integer.parseInt(((String)solrRes.get(0).getFieldValue("id")));
+//					doc.addField("id", existingId);
+//				}
+				
+				if (configuration.getUseUrisAsIds()) {
+					doc.addField("id", uri);
+				} else {
+					doc.addField("id", startingIndex++);
+				}
+				
+				
+				
 				// Add the URI field (mandatory) ...
 				doc.addField("uri_ss", normalizeWWWUri(uri));
 			
@@ -243,7 +283,7 @@ public class Index {
 			
 			
 			
-			// The text field ha a special meaning: it contains text for the full text index.
+			// The text field has a special meaning: it contains text for the full text index.
 			if (field.equals("text")) {
 				doc.setField(field, val, 1.0f);
 			} else if (configuration.getTags_black_list()==null || !configuration.getTags_black_list().contains(val)) {
