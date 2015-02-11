@@ -70,7 +70,7 @@ public class Index {
 	
 	public static void main(String[] args) throws RepositoryException, QueryEvaluationException, MalformedQueryException, IOException, SolrServerException {
 
-		Configuration conf = new DM2EVMIndexingConfiguration();
+		Configuration conf = new DM2EIndexingConfiguration();
 		//Configuration conf = new DM2EIndexingConfiguration();
 		
 		//Configuration conf = new GramsciDictionaryIndexingConfigutation();

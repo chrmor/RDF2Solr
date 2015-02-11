@@ -20,7 +20,6 @@ public class GramsciSourceIndexingConfiguration extends Configuration {
 			"PREFIX :<http://purl.org/dc/terms/> ";
 	private static final String[] GRAMSCI_INDEXING_QUERIES = {
 		
-
 		//GRAMSCI_PREFIXES + "select distinct ?uri ?field ?value where {?uri <http://purl.org/spar/cito/mentions> ?entity. ?entity ?field ?value. FILTER (?field=<http://purl.org/dc/elements/1.1/type>)}",
 		//GRAMSCI_PREFIXES + "select distinct ?uri ?field ?value where {?uri ?field ?value. FILTER (?value=<http://purl.org/gramscisource/ont#Nota> || ?value=skos:Concept) FILTER (?field=rdf:type)}",
 		GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?uri <http://purl.org/dc/elements/1.1/description> ?value. }",
@@ -28,7 +27,7 @@ public class GramsciSourceIndexingConfiguration extends Configuration {
 		//GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?uri <http://purl.org/dc/terms/description> ?value. }",
 		//GRAMSCI_PREFIXES + "select distinct ?uri ?field ?value where {?uri rdf:type skos:Concept. ?uri ?field ?value. FILTER(?field!=<http://purl.org/dc/terms/description>) FILTER (isLiteral(?value))}",
 		GRAMSCI_PREFIXES + "select distinct ?uri ?field ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?uri ?field ?r. ?r rdfs:label ?value.}",
-		GRAMSCI_PREFIXES + "select distinct ?uri ?field ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?r ?field ?uri. ?r rdfs:label ?value}",
+		GRAMSCI_PREFIXES + "select distinct ?uri ?field ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?r ?field ?uri. ?r rdfs:label ?value}"
 		//GRAMSCI_PREFIXES + "select distinct ?uri ?field ?value where {?uri rdf:type skos:Concept. ?uri ?field ?obj. ?obj rdfs:label ?value.}"
 		 };
 	
@@ -42,10 +41,8 @@ public class GramsciSourceIndexingConfiguration extends Configuration {
 		GRAMSCI_FACET_QUERIES.put("mentions_book", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?text :isPartOf ?uri. ?text <http://purl.org/spar/cito/mentions> ?entity. ?entity rdf:type <http://dbpedia.org/ontology/Book>.?entity rdfs:label ?value. } ");
 		GRAMSCI_FACET_QUERIES.put("mentions_event", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?text :isPartOf ?uri. ?text <http://purl.org/spar/cito/mentions> ?entity. ?entity rdf:type <http://dbpedia.org/ontology/Event>.?entity rdfs:label ?value. } ");
 		GRAMSCI_FACET_QUERIES.put("mentions_language", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?text :isPartOf ?uri. ?text <http://purl.org/spar/cito/mentions> ?entity. ?entity rdf:type <http://dbpedia.org/ontology/Language>.?entity rdfs:label ?value. } ");
-		
 		GRAMSCI_FACET_QUERIES.put("cited_by", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?text :isPartOf ?uri. ?entry <http://purl.org/spar/cito/cites> ?text. ?entry rdfs:label ?value. } ");
 		GRAMSCI_FACET_QUERIES.put("mentions_type", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?text :isPartOf ?uri. ?text <http://purl.org/spar/cito/mentions> ?entity. ?entity rdf:type ?value. } ");
-		
 		
 	}
 	

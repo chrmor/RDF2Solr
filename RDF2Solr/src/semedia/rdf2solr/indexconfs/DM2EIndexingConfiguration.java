@@ -62,6 +62,85 @@ public class DM2EIndexingConfiguration extends Configuration {
 //											+ "?g = <http://data.dm2e.eu/data/dataset/sbb/kpe_DE-1a_8535/20140908183508838>"
 //										+ ")";
 	
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/bas/codsupra/20150109170547566>"
+//		+ ")";
+
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/bbaw/dta/20141209170514098>"
+//		+ ")";
+
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/brandeis/scwp/20150107214355089>"
+//		+ ")";
+
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/cjh/lbiarchive/20141126124504174>"
+//		+ ")";
+
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/cjh/lbilibrary/20141126124859870>"
+//		+ ")";
+
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/cjh/lbiperiodicals/20141126124926417>"
+//		+ ")";
+
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/cjh/yivoarchive/20141126125955374>"
+//		+ ")";	
+
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/cjh/yivolibrary/20141126130144265>"
+//		+ ")";	
+	
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/ecorr/burckhardtsource/20150114171613721>"
+//		+ ")";	
+	
+
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140830013040893>"
+//		+ ")";	
+
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/jdc/nyar1418/20150108174431966>"
+//		+ ")";	
+	
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/mpiwg/harriot/20150113133045860>"
+//		+ ")";	
+	
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/mpiwg/ismi/20150113104637149>"
+//		+ ")";	
+	
+	
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/mpiwg/rara/20150113133849657>"
+//		+ ")";	
+	
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/nli/archives/20150115185856288>"
+//		+ ")";	
+
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/nli/books/20150115185601757>"
+//		+ ")";	
+
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/nli/manuscripts/20150115185551759>"
+//		+ ")";	
+	
+	private static final String namedGraphsFilter = "FILTER ("
+			+ "?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140908184105626>"
+		+ ")";	
+	
+
+
+
+
+
 	//ONB only
 //	private static final String namedGraphsFilter = "FILTER ("
 //			+ "?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140908184105626> || "
@@ -107,9 +186,9 @@ public class DM2EIndexingConfiguration extends Configuration {
 //			+ "?g = <http://data.dm2e.eu/data/dataset/gei/gei-digital/20140830013040893>"
 //		+ ")";
 	//WAB only
-	private static final String namedGraphsFilter = "FILTER ("
-			+ "?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140829133247065>"
-		+ ")";
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/uib/wab/20140829133247065>"
+//		+ ")";
 //	    
 //	private static final String typesFilter = "FILTER (\n" + 
 //    	    "                ?dc_type = <http://purl.org/ontology/bibo/Journal>\n" + 
