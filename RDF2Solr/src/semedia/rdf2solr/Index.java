@@ -32,6 +32,8 @@ import semedia.rdf2solr.indexconfs.Configuration;
 import semedia.rdf2solr.indexconfs.DM2EIndexingConfiguration;
 import semedia.rdf2solr.indexconfs.DM2EVMIndexingConfiguration;
 import semedia.rdf2solr.indexconfs.GramsciDictionaryIndexingConfigutation;
+import semedia.rdf2solr.indexconfs.GramsciMediaIndexingConfigutation;
+import semedia.rdf2solr.indexconfs.GramsciSourceIndexingConfiguration;
 import semedia.rdf2solr.indexconfs.WABOntologyIndexingConfig;
 
 public class Index {
@@ -70,8 +72,10 @@ public class Index {
 	
 	public static void main(String[] args) throws RepositoryException, QueryEvaluationException, MalformedQueryException, IOException, SolrServerException {
 
-		Configuration conf = new DM2EIndexingConfiguration();
 		//Configuration conf = new DM2EIndexingConfiguration();
+		//Configuration conf = new DM2EIndexingConfiguration();
+		Configuration conf = new GramsciSourceIndexingConfiguration();
+		//Configuration conf = new GramsciMediaIndexingConfigutation();
 		
 		//Configuration conf = new GramsciDictionaryIndexingConfigutation();
 		Index index = new Index(conf);
