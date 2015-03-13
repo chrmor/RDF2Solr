@@ -74,10 +74,10 @@ public class Index {
 
 		//Configuration conf = new DM2EIndexingConfiguration();
 		//Configuration conf = new DM2EIndexingConfiguration();
-		Configuration conf = new GramsciSourceIndexingConfiguration();
+		//Configuration conf = new GramsciSourceIndexingConfiguration();
 		//Configuration conf = new GramsciMediaIndexingConfigutation();
 		
-		//Configuration conf = new GramsciDictionaryIndexingConfigutation();
+		Configuration conf = new GramsciDictionaryIndexingConfigutation();
 		Index index = new Index(conf);
 		//Index index = new Index(WAB_CONFIGURATION);
 		if (index.configuration.getResetIndex()) {

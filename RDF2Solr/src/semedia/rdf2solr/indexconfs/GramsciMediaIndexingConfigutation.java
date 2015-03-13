@@ -13,41 +13,33 @@ public class GramsciMediaIndexingConfigutation  extends Configuration{
 	private static final String GRAMSCI_SESAME_REPOSITORY_NAME = "gramsci-native";
 	
 	private static final String GRAMSCI_PREFIXES = 
-						      "PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> "
-							+ "PREFIX foaf:<http://xmlns.com/foaf/0.1/> "
-							+ "PREFIX owl:<http://www.w3.org/2002/07/owl#> "
-							+ "PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> "
-							+ "PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-							+ "PREFIX skos:<http://www.w3.org/2004/02/skos/core#> "
-							+ "PREFIX :<http://purl.org/dc/elements/1.1/> "
-							+ "PREFIX cito:<http://purl.org/net/cito/> "
-							+ "PREFIX dcterms:<http://purl.org/dc/terms/> "
-							+ "PREFIX gramsci:<http://purl.org/gramscisource/ont#> "
-							+ "PREFIX dbpedia:<http://it.dbpedia.org/resource/> "
-							+ "PREFIX gs:<http://gramscisource.org/> "
-							+ "PREFIX oa:<http://www.openannotation.org/ns/> "
-							+ "PREFIX dct:<http://purl.org/dc/terms/> "
-							+ "PREFIX sesame:<http://www.openrdf.org/schema/sesame#> "
-							+ "PREFIX fn:<http://www.w3.org/2005/xpath-functions> "
-							+ "PREFIX dc:<http://purl.org/dc/elements/1.1/> "
-							+ "PREFIX edm:<http://www.europeana.eu/schemas/edm/> ";	
+			  					  "PREFIX dct: <http://purl.org/dc/terms/>"
+			  					+ "PREFIX gramsci: <http://purl.org/gramcsiproject/vocab/>"
+			  					+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+			  					+ "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+			  					+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+			  					+ "PREFIX cito: <http://purl.org/spar/cito/>"
+			  					+ "PREFIX dcterms: <http://purl.org/dc/terms/>"
+			  					+ "PREFIX dc: <http://purl.org/dc/elements/1.1/>"
+			  					+ "PREFIX edm: <http://www.europeana.eu/schemas/edm/>";
 	
 	private static final String[] GRAMSCI_MEDIA_INDEXING_QUERIES = {
-		GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dc:description ?value. }"		
+		GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dc:description ?value. }"		
 	};
 	
 	private static HashMap<String, String> GRAMSCI_FACET_QUERIES = new HashMap<String, String>();
 	
 	static {
-		GRAMSCI_FACET_QUERIES.put("title_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dct:title ?value. }");
-		GRAMSCI_FACET_QUERIES.put("description_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dc:description ?value. }");
-		GRAMSCI_FACET_QUERIES.put("type_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dc:type ?value. }");
-		GRAMSCI_FACET_QUERIES.put("ctype_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri edm:type ?value. }");
-		GRAMSCI_FACET_QUERIES.put("language_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dct:language ?value. }");
-		GRAMSCI_FACET_QUERIES.put("date_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dc:date ?value. }");
-		GRAMSCI_FACET_QUERIES.put("subject_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dc:subject ?value. }");
-		GRAMSCI_FACET_QUERIES.put("contributor_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri dc:contributor ?value. }");
-		GRAMSCI_FACET_QUERIES.put("shownAt_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://purl.org/gramcsiproject/media/> where {?uri edm:isShownAt ?value. }");
+		GRAMSCI_FACET_QUERIES.put("title_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dct:title ?value. }");
+		GRAMSCI_FACET_QUERIES.put("description_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dc:description ?value. }");
+		GRAMSCI_FACET_QUERIES.put("type_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dc:type ?value. }");
+		GRAMSCI_FACET_QUERIES.put("ctype_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri edm:type ?value. }");
+		GRAMSCI_FACET_QUERIES.put("language_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dc:language ?value. }");
+		GRAMSCI_FACET_QUERIES.put("date_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dc:date ?value. }");
+		GRAMSCI_FACET_QUERIES.put("subject_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dc:subject ?value. }");
+		GRAMSCI_FACET_QUERIES.put("contributor_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dc:contributor ?value. }");
+		GRAMSCI_FACET_QUERIES.put("shownAt_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri edm:isShownAt ?value. }");
+		GRAMSCI_FACET_QUERIES.put("dictionary_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri dct:subject ?entry. ?entry rdf:type skos:Concept. ?entry rdfs:label ?value.}");
 	}
 	
 	private static final String[] GRAMSCI_ENTITIES_BLACK_LIST = {};

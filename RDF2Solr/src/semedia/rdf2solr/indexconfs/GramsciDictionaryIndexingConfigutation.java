@@ -16,18 +16,21 @@ public class GramsciDictionaryIndexingConfigutation  extends Configuration{
 	private static final String GRAMSCI_DICTINARY_SESAME_URL = "http://gramsciproject.org:8080/openrdf-sesame/repositories/";
 	//private static final String GRAMSCI_DICTINARY_SESAME_REPOSITORY_NAME = "gramscisource";
 	private static final String GRAMSCI_DICTINARY_SESAME_REPOSITORY_NAME = "gramsci-native";
-	private static final String GRAMSCI_DICTINARY_PREFIXES = "PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> "
-							+ "PREFIX foaf:<http://xmlns.com/foaf/0.1/> "
-							+ "PREFIX owl:<http://www.w3.org/2002/07/owl#> "
-							+ "PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> "
-							+ "PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-							+ "PREFIX skos:<http://www.w3.org/2004/02/skos/core#> "
-							+ "PREFIX :<http://purl.org/dc/elements/1.1/> "
-							+ "PREFIX cito:<http://purl.org/net/cito/> "
-							+ "PREFIX dcterms:<http://purl.org/dc/terms/> "
-							+ "PREFIX gramsci:<http://purl.org/gramscisource/ont#> "
-							+ "PREFIX dbpedia:<http://it.dbpedia.org/resource/> "
-							+ "PREFIX gs:<http://gramscisource.org/>";
+	private static final String GRAMSCI_DICTINARY_PREFIXES = 
+										"PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> "
+									  + "PREFIX foaf:<http://xmlns.com/foaf/0.1/> "
+									  + "PREFIX owl:<http://www.w3.org/2002/07/owl#> "
+									  + "PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> "
+									  + "PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
+									  + "PREFIX skos:<http://www.w3.org/2004/02/skos/core#> "
+									  + "PREFIX dc:<http://purl.org/dc/elements/1.1/> "
+									  + "PREFIX cito:<http://purl.org/spar/cito/> "
+									  + "PREFIX dcterms:<http://purl.org/dc/terms/> "
+									  + "PREFIX gramsci:<http://purl.org/gramcsiproject/vocab/> "
+									  + "PREFIX dbpedia:<http://it.dbpedia.org/resource/> "
+									  + "PREFIX gs:<http://gramscisource.org/> "
+									  + "PREFIX schema: <http://schema.org/> ";
+	
 	private static final String[] GRAMSCI_DICTINARY_INDEXING_QUERIES = {
 		GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?uri dcterms:description ?value. }"
 		//GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?field ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?uri ?field ?value. FILTER(?field!=<http://purl.org/dc/elements/1.1/description>) FILTER (isLiteral(?value))}",
@@ -51,6 +54,7 @@ public class GramsciDictionaryIndexingConfigutation  extends Configuration{
 		GRAMSCI_DICTINARY_FACET_QUERIES.put("length_i", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri <http://purl.org/gramscisource/ont#length> ?value. ?uri rdf:type skos:Concept. ?uri dcterms:type gramsci:DictionaryEntry.}");
 		GRAMSCI_DICTINARY_FACET_QUERIES.put("author_s", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?uri dcterms:type gramsci:DictionaryEntry. ?uri <http://purl.org/dc/terms/creator> ?auth. ?auth rdfs:label ?value.}");
 		GRAMSCI_DICTINARY_FACET_QUERIES.put("related_to_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?uri dcterms:type gramsci:DictionaryEntry. ?uri rdfs:seeAlso ?rel. ?rel rdfs:label ?value. FILTER (LANG(?value)= 'it')}");
+		GRAMSCI_DICTINARY_FACET_QUERIES.put("media_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?entry dcterms:subject ?uri. ?entry rdf:type schema:MediaObject. ?entry dcterms:title ?value }");
 		/*
 		GRAMSCI_DICTINARY_FACET_QUERIES.put("mentions_person", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?text :isPartOf ?uri. ?text <http://purl.org/spar/cito/mentions> ?entity. ?entity rdf:type <http://dbpedia.org/ontology/Person>.?entity rdfs:label ?value. } ");
 		GRAMSCI_DICTINARY_FACET_QUERIES.put("mentions_work", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?text :isPartOf ?uri. ?text <http://purl.org/spar/cito/mentions> ?entity. ?entity rdf:type <http://dbpedia.org/ontology/Work>.?entity rdfs:label ?value. } ");
