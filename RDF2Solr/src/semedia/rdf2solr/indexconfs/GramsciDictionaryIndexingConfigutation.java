@@ -8,8 +8,8 @@ public class GramsciDictionaryIndexingConfigutation  extends Configuration{
 	/**
 	 * GramsciSource Dictionary configuration
 	 */
-	private static final String GRAMSCI_DICTIONARY_SOLR_SERVER = "http://metasound.dibet.univpm.it:8080/solr-gramsci-dictionary/";
-	//private static final String GRAMSCI_DICTIONARY_SOLR_SERVER = "http://gramsciproject.org:8080/solr-gramsci-dictionary/";
+	//private static final String GRAMSCI_DICTIONARY_SOLR_SERVER = "http://metasound.dibet.univpm.it:8080/solr-gramsci-dictionary/";
+	private static final String GRAMSCI_DICTIONARY_SOLR_SERVER = "http://gramsciproject.org:8080/solr-gramsci-dictionary/";
 	//private static final String GRAMSCI_DICTIONARY_SOLR_SERVER = "http://localhost:8983/solr/";
 	
 	//private static final String GRAMSCI_DICTINARY_SESAME_URL = "http://metasound.dibet.univpm.it:8080/openrdf-sesame/repositories/";
@@ -29,6 +29,7 @@ public class GramsciDictionaryIndexingConfigutation  extends Configuration{
 									  + "PREFIX gramsci:<http://purl.org/gramcsiproject/vocab/> "
 									  + "PREFIX dbpedia:<http://it.dbpedia.org/resource/> "
 									  + "PREFIX gs:<http://gramscisource.org/> "
+									  + "PREFIX gramsciDict:<http://data.gramsciproject.org/dizionario/> "
 									  + "PREFIX schema: <http://schema.org/> ";
 	
 	private static final String[] GRAMSCI_DICTINARY_INDEXING_QUERIES = {
@@ -43,17 +44,17 @@ public class GramsciDictionaryIndexingConfigutation  extends Configuration{
 	
 	private static HashMap<String, String> GRAMSCI_DICTINARY_FACET_QUERIES = new HashMap<String, String>();
 	static {
-		GRAMSCI_DICTINARY_FACET_QUERIES.put("length_i", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri <http://purl.org/gramscisource/ont#length> ?value. ?uri rdf:type skos:Concept. ?uri dcterms:type gramsci:DictionaryEntry.}");
-		GRAMSCI_DICTINARY_FACET_QUERIES.put("norm_length_s", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri <http://purl.org/gramscisource/ont#normLength> ?value. ?uri rdf:type skos:Concept.  ?uri dcterms:type gramsci:DictionaryEntry. FILTER ( lang(?value) = \"it\" )}");
-		GRAMSCI_DICTINARY_FACET_QUERIES.put("cites_quaderno_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept.  ?uri dcterms:type gramsci:DictionaryEntry.?uri <http://purl.org/spar/cito/cites> ?c. ?c dcterms:isPartOf ?nota. ?nota dcterms:isPartOf ?quad. ?quad rdfs:label ?value.}");
-		GRAMSCI_DICTINARY_FACET_QUERIES.put("cites_nota_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept.  ?uri dcterms:type gramsci:DictionaryEntry.?uri <http://purl.org/spar/cito/cites> ?c. ?c dcterms:isPartOf ?nota. ?nota rdfs:label ?value.}");
-		GRAMSCI_DICTINARY_FACET_QUERIES.put("type_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept.  ?uri dcterms:type gramsci:DictionaryEntry.?uri rdf:type ?t. ?t rdfs:label ?value. FILTER ( ?t != skos:Concept ) FILTER ( lang(?value) = \"it\" )}");
-		//GRAMSCI_DICTINARY_FACET_QUERIES.put("type_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept.  ?uri dcterms:type gramsci:DictionaryEntry. skos:Concept rdfs:label ?value. FILTER ( lang(?value) = \"it\" ) FILTER NOT EXISTS {?uri rdf:type foaf:Person}}");
-		GRAMSCI_DICTINARY_FACET_QUERIES.put("topic_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept.  ?uri dcterms:type gramsci:DictionaryEntry. ?uri skos:broader ?t. ?t skos:prefLabel ?value.}");
-		GRAMSCI_DICTINARY_FACET_QUERIES.put("label_s", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?uri dcterms:type gramsci:DictionaryEntry. ?uri skos:prefLabel ?value.}");
-		GRAMSCI_DICTINARY_FACET_QUERIES.put("length_i", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri <http://purl.org/gramscisource/ont#length> ?value. ?uri rdf:type skos:Concept. ?uri dcterms:type gramsci:DictionaryEntry.}");
-		GRAMSCI_DICTINARY_FACET_QUERIES.put("author_s", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?uri dcterms:type gramsci:DictionaryEntry. ?uri <http://purl.org/dc/terms/creator> ?auth. ?auth rdfs:label ?value.}");
-		GRAMSCI_DICTINARY_FACET_QUERIES.put("related_to_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?uri dcterms:type gramsci:DictionaryEntry. ?uri rdfs:seeAlso ?rel. ?rel rdfs:label ?value. FILTER (LANG(?value)= 'it')}");
+		GRAMSCI_DICTINARY_FACET_QUERIES.put("length_i", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri gramsci:length ?value. ?uri rdf:type skos:Concept. ?uri dcterms:type gramsciDict:DictionaryEntry.}");
+		GRAMSCI_DICTINARY_FACET_QUERIES.put("norm_length_s", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri <http://purl.org/gramscisource/ont#normLength> ?value. ?uri rdf:type skos:Concept.  ?uri dcterms:type gramsciDict:DictionaryEntry. FILTER ( lang(?value) = \"it\" )}");
+		GRAMSCI_DICTINARY_FACET_QUERIES.put("cites_quaderno_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept.  ?uri dcterms:type gramsciDict:DictionaryEntry.?uri <http://purl.org/spar/cito/cites> ?c. ?c dcterms:isPartOf ?nota. ?nota dcterms:isPartOf ?quad. ?quad rdfs:label ?value.}");
+		GRAMSCI_DICTINARY_FACET_QUERIES.put("cites_nota_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept.  ?uri dcterms:type gramsciDict:DictionaryEntry.?uri <http://purl.org/spar/cito/cites> ?c. ?c dcterms:isPartOf ?nota. ?nota rdfs:label ?value.}");
+		GRAMSCI_DICTINARY_FACET_QUERIES.put("type_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept.  ?uri dcterms:type gramsciDict:DictionaryEntry.?uri rdf:type ?t. ?t rdfs:label ?value. FILTER ( ?t != skos:Concept ) FILTER ( lang(?value) = \"it\" )}");
+		//GRAMSCI_DICTINARY_FACET_QUERIES.put("type_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept.  ?uri dcterms:type gramsciDict:DictionaryEntry. skos:Concept rdfs:label ?value. FILTER ( lang(?value) = \"it\" ) FILTER NOT EXISTS {?uri rdf:type foaf:Person}}");
+		GRAMSCI_DICTINARY_FACET_QUERIES.put("topic_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept.  ?uri dcterms:type gramsciDict:DictionaryEntry. ?uri skos:broader ?t. ?t skos:prefLabel ?value.}");
+		GRAMSCI_DICTINARY_FACET_QUERIES.put("label_s", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?uri dcterms:type gramsciDict:DictionaryEntry. ?uri skos:prefLabel ?value.}");
+		GRAMSCI_DICTINARY_FACET_QUERIES.put("length_i", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri <http://purl.org/gramscisource/ont#length> ?value. ?uri rdf:type skos:Concept. ?uri dcterms:type gramsciDict:DictionaryEntry.}");
+		GRAMSCI_DICTINARY_FACET_QUERIES.put("author_s", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?uri dcterms:type gramsciDict:DictionaryEntry. ?uri <http://purl.org/dc/terms/creator> ?auth. ?auth rdfs:label ?value.}");
+		GRAMSCI_DICTINARY_FACET_QUERIES.put("related_to_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?uri dcterms:type gramsciDict:DictionaryEntry. ?uri rdfs:seeAlso ?rel. ?rel rdfs:label ?value. FILTER (LANG(?value)= 'it')}");
 		GRAMSCI_DICTINARY_FACET_QUERIES.put("media_ss", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?entry dcterms:subject ?uri. ?entry rdf:type schema:MediaObject. ?entry dcterms:title ?value }");
 		/*
 		GRAMSCI_DICTINARY_FACET_QUERIES.put("mentions_person", GRAMSCI_DICTINARY_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type <http://purl.org/gramscisource/ont#Nota>. ?text :isPartOf ?uri. ?text <http://purl.org/spar/cito/mentions> ?entity. ?entity rdf:type <http://dbpedia.org/ontology/Person>.?entity rdfs:label ?value. } ");
