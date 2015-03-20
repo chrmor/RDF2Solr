@@ -124,18 +124,20 @@ public class DM2EIndexingConfiguration extends Configuration {
 //			+ "?g = <http://data.dm2e.eu/data/dataset/nli/archives/20150115185856288>"
 //		+ ")";	
 
-//	private static final String namedGraphsFilter = "FILTER ("
-//			+ "?g = <http://data.dm2e.eu/data/dataset/nli/books/20150115185601757>"
-//		+ ")";	
+	private static final String namedGraphsFilter = "FILTER ("
+			+ "?g = <http://data.dm2e.eu/data/dataset/nli/books/20150115185601757>"
+		+ ")";	
 
 //	private static final String namedGraphsFilter = "FILTER ("
 //			+ "?g = <http://data.dm2e.eu/data/dataset/nli/manuscripts/20150115185551759>"
 //		+ ")";	
 	
-	private static final String namedGraphsFilter = "FILTER ("
-			+ "?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140908184105626>"
-		+ ")";	
 	
+	//DONE
+//	private static final String namedGraphsFilter = "FILTER ("
+//			+ "?g = <http://data.dm2e.eu/data/dataset/onb/abo/20140908184105626>"
+//		+ ")";	
+//	
 
 
 
@@ -211,7 +213,6 @@ public class DM2EIndexingConfiguration extends Configuration {
 			    					"            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
 			    					"            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" +  
 			    					"            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>. \n" + 
-			    					"            ?uri <http://purl.org/dc/elements/1.1/type> ?dc_type .\n" +
 			    					"			?g <http://www.w3.org/2000/01/rdf-schema#label> ?value." +
 			    						typesFilter + 
 			    "        }" + 
@@ -222,26 +223,106 @@ public class DM2EIndexingConfiguration extends Configuration {
 	
 	private static final String[] DM2E_INDEXING_QUERIES = {
 
+		//GET ALL rdf:labels of related objects
 		"    select distinct ?uri ?field ?value where {\n" + 
 			    "        graph ?g {\n" +
 			    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
 			    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" +  
 			    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>. \n" + 
-			    "            ?uri <http://purl.org/dc/elements/1.1/type> ?dc_type .\n" + 
 			    		typesFilter +
 			    "            ?uri ?field ?v. \n" + 
 			    "            ?v <http://www.w3.org/2000/01/rdf-schema#label> ?value.\n" + 
 			    "        }\n" +
 			    		 namedGraphsFilter + 
-			    "    }\n",	
+			    "    }",	
+
 		
+		
+			    "    select distinct ?uri ?field ?value where {\n" + 
+	    	    "        graph ?g {\n" +
+	    	    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
+	    	    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" +  
+	    	    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>. \n" + 
+	    	    		typesFilter +
+	    	    "            ?uri ?field ?v. \n" + 
+	    	    "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n"+ 
+	    	    "            OPTIONAL {?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value1. ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value2. ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value3. ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value4. }\n"+ 
+	    	    "        }\n" +
+	    	    		 namedGraphsFilter + 
+	    	    "    }\n",
+		
+		//ALTERNATIVE FOR ONB ABO
+		
+//		    "    select distinct ?uri ?field ?value where {\n" + 
+//    	    "        graph ?g {\n" +
+//    	    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
+//    	    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" +  
+//    	    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>. \n" + 
+//    	    		typesFilter +
+//    	    "            ?uri ?field ?v. \n" + 
+//    	    "			 FILTER (?field=<http://purl.org/dc/elements/1.1/creator>)" + 
+//    	    "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n" + 
+//    	    "        }\n" +
+//    	    		 namedGraphsFilter + 
+//    	    "    }\n",
+//		    "    select distinct ?uri ?field ?value where {\n" + 
+//		    	    "        graph ?g {\n" +
+//		    	    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
+//		    	    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" +  
+//		    	    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>. \n" + 
+//		    	    		typesFilter +
+//		    	    "            ?uri ?field ?v. \n" + 
+//		    	    "			 FILTER (?field=<http://purl.org/dc/elements/1.1/subject>)" + 
+//		    	    "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n" + 
+//		    	    "        }\n" +
+//		    	    		 namedGraphsFilter + 
+//		    	    "    }\n",
+//		"    select distinct ?uri ?field ?value where {\n" + 
+//	    "        graph ?g {\n" +
+//	    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
+//	    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" +  
+//	    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>. \n" + 
+//	    		typesFilter +
+//	    "            ?uri ?field ?v. \n" + 
+//	    "			 FILTER (?field=<http://purl.org/dc/elements/1.1/publisher>)" + 
+//	    "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n" + 
+//	    "        }\n" +
+//	    		 namedGraphsFilter + 
+//	    "    }\n",
+//		"    select distinct ?uri ?field ?value where {\n" + 
+//	    "        graph ?g {\n" +
+//	    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
+//	    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" +  
+//	    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>. \n" + 
+//	    		typesFilter +
+//	    "            ?uri ?field ?v. \n" + 
+//	    "			 FILTER (?field=<http://onto.dm2e.eu/schemas/dm2e/publishedAt>)" + 
+//	    "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n" + 
+//	    "        }\n" +
+//	    		 namedGraphsFilter + 
+//	    "    }\n",
+//		"    select distinct ?uri ?field ?value where {\n" + 
+//	    "        graph ?g {\n" +
+//	    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
+//	    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" +  
+//	    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>. \n" + 
+//	    		typesFilter +
+//	    "            ?uri ?field ?v. \n" + 
+//	    "			 FILTER (?field=<http://purl.org/dc/terms/issued>)" + 
+//	    "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n" + 
+//	    "        }\n" +
+//	    		 namedGraphsFilter + 
+//	    "    }\n", 
+		    	    
+	    
+		//GET ALL related literals
 	    "            \n" + 
 	    	    "    select distinct ?uri ?field ?value where {\n" + 
 	    	    "        graph ?g {\n" +
 	    	    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
 	    	    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" + 
 	    	    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>. \n" + 
-	    	    "            ?uri <http://purl.org/dc/elements/1.1/type> ?dc_type .\n" + 
+//	    	    "            ?uri <http://purl.org/dc/elements/1.1/type> ?dc_type .\n" + 
 	    	    		typesFilter + 
 	    	    "            ?uri ?field ?value.\n" + 
 	    	    "            FILTER (isLiteral(?value))\n" + 
@@ -249,18 +330,6 @@ public class DM2EIndexingConfiguration extends Configuration {
 	    	    		namedGraphsFilter + 
 	    	    "    }       \n", 
 		
-	    "    select distinct ?uri ?field ?value where {\n" + 
-	    	    "        graph ?g {\n" +
-	    	    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
-	    	    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" +  
-	    	    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>. \n" + 
-	    	    "            ?uri <http://purl.org/dc/elements/1.1/type> ?dc_type .\n" + 
-	    	    		typesFilter +
-	    	    "            ?uri ?field ?v. \n" + 
-	    	    "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n" + 
-	    	    "        }\n" +
-	    	    		 namedGraphsFilter + 
-	    	    "    }\n",
 
 
    
@@ -290,18 +359,49 @@ public class DM2EIndexingConfiguration extends Configuration {
     	    "        }\n" +
     	    		namedGraphsFilter + 
     	    "    }\n", 
+    	    
+    	    
+    	   
+    	    
     "    select distinct ?uri ?field ?value where {\n" + 
     "        graph ?g {\n" +
     "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
     "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" + 
-    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>.\n" + 
-    "            ?uri <http://purl.org/dc/elements/1.1/type> ?dc_type .\n" + 
+    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>.\n" +  
     		typesFilter +
     "            ?agg ?field ?v. \n" + 
     "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n" + 
     "        }\n" +
     		namedGraphsFilter + 
     "    }\n", 
+    	    
+    	    //ALTERNATICE FOR ONB
+//    	    "    select distinct ?uri ?field ?value where {\n" + 
+//    	    "        graph ?g {\n" +
+//    	    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
+//    	    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" + 
+//    	    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>.\n" + 
+//    	    		typesFilter +
+//    	    "            ?agg ?field ?v. \n" + 
+//    	    "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n" + 
+//    	    "        }\n"
+//    	    + "		 FILTER (?field = <http://www.europeana.eu/schemas/edm/dataProvider>)" +
+//    	    		namedGraphsFilter + 
+//    	    "    }\n", 
+//    	    "    select distinct ?uri ?field ?value where {\n" + 
+//    	    "        graph ?g {\n" +
+//    	    "            ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri.\n" + 
+//    	    "            ?agg <http://onto.dm2e.eu/schemas/dm2e/displayLevel> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n" + 
+//    	    "            ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.europeana.eu/schemas/edm/ProvidedCHO>.\n" + 
+//    	    		typesFilter +
+//    	    "            ?agg ?field ?v. \n" + 
+//    	    "            ?v <http://www.w3.org/2004/02/skos/core#prefLabel> ?value.\n" + 
+//    	    "        }\n" + 
+//    	    "		 FILTER (?field = <http://www.europeana.eu/schemas/edm/provider>)" +
+//    	    		namedGraphsFilter + 
+//    	    "    }\n", 
+//    	    
+    	    
     
     "    select distinct ?uri ?field ?value where {\n" + 
     "        graph ?g {\n" +
@@ -377,7 +477,8 @@ public class DM2EIndexingConfiguration extends Configuration {
     "                ?uri <http://onto.dm2e.eu/schemas/dm2e/cover> ?value.\n" + 
     "            }\n" +
     				namedGraphsFilter + 
-    "    }"};
+    "    }"
+    };
 	
 	/*
 	private static final String[] DM2E_INDEXING_QUERIES = {
