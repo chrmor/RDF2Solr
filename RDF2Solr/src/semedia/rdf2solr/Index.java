@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -33,7 +34,7 @@ import semedia.rdf2solr.indexconfs.DM2EIndexingConfiguration;
 import semedia.rdf2solr.indexconfs.DM2EVMIndexingConfiguration;
 import semedia.rdf2solr.indexconfs.GramsciDictionaryIndexingConfigutation;
 import semedia.rdf2solr.indexconfs.GramsciMediaIndexingConfigutation;
-import semedia.rdf2solr.indexconfs.GramsciSourceIndexingConfiguration;
+import semedia.rdf2solr.indexconfs.GramsciQuaderniIndexingConfiguration;
 import semedia.rdf2solr.indexconfs.WABOntologyIndexingConfig;
 
 public class Index {
@@ -72,12 +73,12 @@ public class Index {
 	
 	public static void main(String[] args) throws RepositoryException, QueryEvaluationException, MalformedQueryException, IOException, SolrServerException {
 
+		
 		//Configuration conf = new DM2EIndexingConfiguration();
-		//Configuration conf = new DM2EIndexingConfiguration();
-		//Configuration conf = new GramsciSourceIndexingConfiguration();
+		Configuration conf = new GramsciQuaderniIndexingConfiguration();
 		//Configuration conf = new GramsciMediaIndexingConfigutation();
 		
-		Configuration conf = new GramsciDictionaryIndexingConfigutation();
+		//Configuration conf = new GramsciDictionaryIndexingConfigutation();
 		Index index = new Index(conf);
 		//Index index = new Index(WAB_CONFIGURATION);
 		if (index.configuration.getResetIndex()) {
@@ -139,6 +140,43 @@ public class Index {
 					}
 				}
 				
+				if (configuration.getPunditQueries() != null) {
+					for (String endpoint : configuration.getPunditQueries().keySet()) {
+						Repository rep = new HTTPRepository(endpoint);
+						RepositoryConnection connection = rep.getConnection();
+						HashMap<String, ArrayList<String>> facetQueries = configuration.getPunditQueries().get(endpoint);
+						for (String field : facetQueries.keySet()) {
+							ArrayList<String> qs = facetQueries.get(field);
+							for (String q : qs) {
+								System.out.println("Facet Query for field :\n" + field + "\n" + q);
+								TupleQuery tq = connection.prepareTupleQuery(QueryLanguage.SPARQL, q);
+								TupleQueryResult tqr = tq.evaluate();
+								while (tqr.hasNext()) {
+									BindingSet bs = tqr.next();
+									String uri = ((Resource)bs.getBinding("uri").getValue()).stringValue();
+									//Hack (BUR data sucks!)
+									if (uri.startsWith("http://burckhardtsource.org")) {
+										uri = uri.replaceAll("letter","api.php/tc");
+									}
+									Value value = bs.getBinding("value").getValue();
+									Set<String> punditFacetsQueries = configuration.getPunditFacetsQueries();
+									for (String query : punditFacetsQueries) {
+										query = query.replaceAll("annotatedObject", "<" + uri + ">");
+										indexByQuery(query, conn, solrDocs, field, value.stringValue());
+									}
+									HashMap<String, String> annotatedSubItemsQueries = configuration.getAnnotatedSubitemsQueries();
+									for (String annotatedSubitemsField : annotatedSubItemsQueries.keySet()) {
+										String asq = annotatedSubItemsQueries.get(annotatedSubitemsField);
+										asq = asq.replaceAll("annotatedObject", "<" + uri + ">");
+										indexByQuery(asq, conn, solrDocs, annotatedSubitemsField, "{\"subItem\":\"SUBITEMURI\",\"annotation\":" + value + "}");
+									}
+								}	
+							}
+						}
+					}
+					
+				} 
+				
 				//Add missing text fields to indexed documents. This is needed to appropriately display them in Ajax-Solr
 				for (SolrInputDocument doc : solrDocs.values()) {
 					if (doc.getField("text") == null) {
@@ -182,6 +220,10 @@ public class Index {
 	 * @throws SolrServerException 
 	 */
 	private void indexByQuery(String query, RepositoryConnection conn, HashMap<String, SolrInputDocument> solrDocs, String defaultField) throws RepositoryException, MalformedQueryException, QueryEvaluationException, MalformedURLException, IOException, SolrServerException {
+		indexByQuery(query, conn, solrDocs, defaultField, null); 
+	}
+	
+	private void indexByQuery(String query, RepositoryConnection conn, HashMap<String, SolrInputDocument> solrDocs, String defaultField, String defaultValue) throws RepositoryException, MalformedQueryException, QueryEvaluationException, MalformedURLException, IOException, SolrServerException {
 	
 		// Execute the query ....
 		TupleQuery tquery = conn.prepareTupleQuery(QueryLanguage.SPARQL, query);
@@ -195,7 +237,7 @@ public class Index {
 			String field;
 			
 			// if no value has been matched skip ... 
-			if (bs.getBinding("value") == null) continue;
+			if (defaultValue==null && bs.getBinding("value") == null) continue;
 			
 			// if the ?field variable has a match ...
 			if (bs.getBinding("field")!=null) {
@@ -221,20 +263,28 @@ public class Index {
 			
 			field = field.replaceAll(" ", "_");
 			
-			Value valval = bs.getBinding("value").getValue();
+			
+			
 			String val;
-			// If the value is not a RDF resource we skip some unwanted chars
-			if (valval instanceof Resource) {
-//				if (valval.stringValue().contains("wittgensteinsource.org") || uri.contains("wittgensteinsource.org")) {
-//					val = truncate(valval.stringValue()).replace("_n", "").replace("_d","");		
-//				} else {
-					val = valval.stringValue();		
-				//}
+			if (defaultValue != null) {
+				if (bs.getBinding("subItem")!=null) {
+					String subItemUri = bs.getBinding("subItem").getValue().stringValue();
+					val = defaultValue.replaceAll("SUBITEMURI", subItemUri);
+				} else {
+					val = defaultValue;
+				}
 				
 			} else {
-				//val = valval.stringValue().replaceAll("\\[", "").replaceAll("\\]", "");
-				val = valval.stringValue();
+				Value valval = bs.getBinding("value").getValue();
+				// If the value is not a RDF resource we skip some unwanted chars
+				if (valval instanceof Resource) {
+						val = valval.stringValue();		
+				} else {
+					//val = valval.stringValue().replaceAll("\\[", "").replaceAll("\\]", "");
+					val = valval.stringValue();
+				}	
 			}
+			
 			
 			if (val.length() > MAX_LENGTH_FIELDS) {
 				val = val.substring(0, MAX_LENGTH_FIELDS) + "...";
@@ -274,9 +324,10 @@ public class Index {
 				doc.addField("uri_ss", normalizeWWWUri(uri));
 			
 				//TODO: togliere: quete informazioni vanno messe ni DATI!
-				if (uri.contains("gramscisource.org")) {
-					String quaderno = normalizeWWWUri(uri).split("quaderno/")[1].split("/nota")[0].replace("10a", "10").replace("10b", "10.5");
-					String nota = normalizeWWWUri(uri).split("nota/")[1];
+				if (uri.contains("gramsciproject.org")) {
+					String quaderno = normalizeWWWUri(uri).split("quaderno/")[1].split("/nota")[0].replace("10-II", "10.5");
+					quaderno = quaderno.replace("10-I", "10");
+					String nota = normalizeWWWUri(uri).split("nota/")[1].split("%20")[0];
 					doc.addField("quaderno_f", Float.parseFloat(quaderno));
 					doc.addField("nota_i", Integer.parseInt(nota));	
 				}
@@ -291,9 +342,13 @@ public class Index {
 			if (field.equals("text")) {
 				doc.setField(field, val, 1.0f);
 			} else if (configuration.getTags_black_list()==null || !configuration.getTags_black_list().contains(val)) {
-				doc.addField(field, val, 1.0f);
+				if (field.endsWith("_s")) {
+					doc.setField(field, val, 1.0f);
+				} else {
+					doc.addField(field, val, 1.0f);
+				}
+				
 			}
-			
 			
 		}
 	}

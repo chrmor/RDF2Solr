@@ -2,6 +2,7 @@ package semedia.rdf2solr.indexconfs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Configuration {
 	
@@ -25,10 +26,13 @@ public class Configuration {
 	private ArrayList<String> tags_black_list;
 	private HashMap<String, String> facetQueries;
 	private boolean useUrisAsIds;
-	private boolean resetIndex;  
+	private boolean resetIndex;
+	private HashMap<String, HashMap<String, ArrayList<String>>> punditQueries;
+	private Set<String> punditFacetsQueries;
+	private HashMap<String, String> annotatedSubitemsQueries;  
 	
 	public Configuration(String solr_server, String sesame_url, String sesame_repository_name, 
-			String prefixes, String[] indexing_queries, HashMap<String, String> facetsQueries, String[] entities_black_list, 
+			String prefixes, String[] indexing_queries, HashMap<String, String> facetsQueries, HashMap<String, HashMap<String, ArrayList<String>>> punditQueries, Set<String> punditFacetsQueris, HashMap<String, String> annotatedSubitemsQueries, String[] entities_black_list, 
 			ArrayList<String> tags_black_list, boolean useUrisAsIds, boolean resetIndex) {
 		
 		this.solr_server = solr_server;
@@ -37,6 +41,9 @@ public class Configuration {
 		this.prefixes = prefixes;
 		this.indexing_queries = indexing_queries;
 		this.facetQueries = facetsQueries;
+		this.punditQueries = punditQueries;
+		this.punditFacetsQueries = punditFacetsQueris;
+		this.annotatedSubitemsQueries = annotatedSubitemsQueries;
 		this.entities_black_list = entities_black_list;
 		this.tags_black_list = tags_black_list;
 		this.useUrisAsIds = useUrisAsIds;
@@ -107,6 +114,32 @@ public class Configuration {
 	public void setFacetQueries(HashMap<String, String> facetQueries) {
 		this.facetQueries = facetQueries;
 	}
+	
+	public HashMap<String, HashMap<String, ArrayList<String>>> getPunditQueries() {
+		return punditQueries;
+	}
+	
+	public void setPunditQueries(HashMap<String, HashMap<String, ArrayList<String>>> distributedFacetedQueries) {
+		this.punditQueries = distributedFacetedQueries;
+	}
+	
+	public Set<String> getPunditFacetsQueries() {
+		return punditFacetsQueries;
+	}
+	
+	public void setPunditFacetsQueries(Set<String> punditFacetsQueries) {
+		this.punditFacetsQueries = punditFacetsQueries;
+	}
+	
+	public HashMap<String, String> getAnnotatedSubitemsQueries() {
+		return annotatedSubitemsQueries;
+	}
+	
+	public void setAnnotatedSubitemsQueries(
+			HashMap<String, String> annotatedSubitemsQueries) {
+		this.annotatedSubitemsQueries = annotatedSubitemsQueries;
+	}
+	
 	public boolean getUseUrisAsIds() {
 		return useUrisAsIds;
 	}

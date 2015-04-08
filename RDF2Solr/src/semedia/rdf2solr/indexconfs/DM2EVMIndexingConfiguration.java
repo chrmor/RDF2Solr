@@ -372,7 +372,7 @@ public class DM2EVMIndexingConfiguration extends Configuration {
 	};
 	*/
 	public DM2EVMIndexingConfiguration() {
-		super(DM2E_SOLR_SERVER, DM2E_SESAME_URL, DM2E_SESAME_REPOSITORY_NAME, DM2E_PREFIXES, DM2E_INDEXING_QUERIES, DM2E_DICTINARY_FACET_QUERIES, null, null, true, false);
+		super(DM2E_SOLR_SERVER, DM2E_SESAME_URL, DM2E_SESAME_REPOSITORY_NAME, DM2E_PREFIXES, DM2E_INDEXING_QUERIES, DM2E_DICTINARY_FACET_QUERIES,null, null, null, null, null, true, false);
 	}
 	 
 	

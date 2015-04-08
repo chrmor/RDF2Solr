@@ -26,7 +26,7 @@ public class GramsciDictionaryIndexingConfigutation  extends Configuration{
 									  + "PREFIX dc:<http://purl.org/dc/elements/1.1/> "
 									  + "PREFIX cito:<http://purl.org/spar/cito/> "
 									  + "PREFIX dcterms:<http://purl.org/dc/terms/> "
-									  + "PREFIX gramsci:<http://purl.org/gramcsiproject/vocab/> "
+									  + "PREFIX gramsci:<http://purl.org/gramsciproject/vocab/> "
 									  + "PREFIX dbpedia:<http://it.dbpedia.org/resource/> "
 									  + "PREFIX gs:<http://gramscisource.org/> "
 									  + "PREFIX gramsciDict:<http://data.gramsciproject.org/dizionario/> "
@@ -76,7 +76,7 @@ public class GramsciDictionaryIndexingConfigutation  extends Configuration{
 	
 	
 	public GramsciDictionaryIndexingConfigutation() {
-		super(GRAMSCI_DICTIONARY_SOLR_SERVER, GRAMSCI_DICTINARY_SESAME_URL, GRAMSCI_DICTINARY_SESAME_REPOSITORY_NAME, GRAMSCI_DICTINARY_PREFIXES, GRAMSCI_DICTINARY_INDEXING_QUERIES, GRAMSCI_DICTINARY_FACET_QUERIES, GRAMSCI_DICTINARY_ENTITIES_BLACK_LIST, GRAMSCI_DICTINARY_TAGS_BLACK_LIST,false,true);
+		super(GRAMSCI_DICTIONARY_SOLR_SERVER, GRAMSCI_DICTINARY_SESAME_URL, GRAMSCI_DICTINARY_SESAME_REPOSITORY_NAME, GRAMSCI_DICTINARY_PREFIXES, GRAMSCI_DICTINARY_INDEXING_QUERIES, GRAMSCI_DICTINARY_FACET_QUERIES, null, null, null, GRAMSCI_DICTINARY_ENTITIES_BLACK_LIST, GRAMSCI_DICTINARY_TAGS_BLACK_LIST,false,true);
 	}
 	
 	

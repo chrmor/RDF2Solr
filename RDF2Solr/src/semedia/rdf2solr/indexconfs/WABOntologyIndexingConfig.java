@@ -84,7 +84,7 @@ public class WABOntologyIndexingConfig extends Configuration{
 	public WABOntologyIndexingConfig() {
 		
 		super(WAB_SOLR_URL, WAB_SESAME_URL, WAB_SESAME_REPOSITORY_NAME, WAB_PREFIXES,
-				WAB_INDEXING_QUERIES, WAB_FACET_QUERIES, WAB_ENTITIES_BLACK_LIST, WAB_TAGS_BLACK_LIST, false, true);
+				WAB_INDEXING_QUERIES, WAB_FACET_QUERIES, null, null, null, WAB_ENTITIES_BLACK_LIST, WAB_TAGS_BLACK_LIST, false, true);
 
 	}
 

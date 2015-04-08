@@ -14,7 +14,7 @@ public class GramsciMediaIndexingConfigutation  extends Configuration{
 	
 	private static final String GRAMSCI_PREFIXES = 
 			  					  "PREFIX dct: <http://purl.org/dc/terms/>"
-			  					+ "PREFIX gramsci: <http://purl.org/gramcsiproject/vocab/>"
+			  					+ "PREFIX gramsci: <http://purl.org/gramsciproject/vocab/>"
 			  					+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 			  					+ "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
 			  					+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
@@ -46,7 +46,7 @@ public class GramsciMediaIndexingConfigutation  extends Configuration{
 	private static ArrayList<String> GRAMSCI_TAGS_BLACK_LIST = new ArrayList<String>();	
 	
 	public GramsciMediaIndexingConfigutation() {
-		super(GRAMSCI_SOLR_SERVER, GRAMSCI_SESAME_URL, GRAMSCI_SESAME_REPOSITORY_NAME, GRAMSCI_PREFIXES, GRAMSCI_MEDIA_INDEXING_QUERIES, GRAMSCI_FACET_QUERIES, GRAMSCI_ENTITIES_BLACK_LIST, GRAMSCI_TAGS_BLACK_LIST, false, true);
+		super(GRAMSCI_SOLR_SERVER, GRAMSCI_SESAME_URL, GRAMSCI_SESAME_REPOSITORY_NAME, GRAMSCI_PREFIXES, GRAMSCI_MEDIA_INDEXING_QUERIES, GRAMSCI_FACET_QUERIES, null, null, null, GRAMSCI_ENTITIES_BLACK_LIST, GRAMSCI_TAGS_BLACK_LIST, false, true);
 	}
 	
 }
