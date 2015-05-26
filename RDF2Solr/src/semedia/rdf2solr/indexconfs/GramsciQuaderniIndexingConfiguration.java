@@ -57,7 +57,12 @@ public class GramsciQuaderniIndexingConfiguration extends Configuration {
 		GRAMSCI_FACET_QUERIES.put("topic_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri dct:type <http://purl.org/gramsciproject/vocab/Nota>. ?topic <http://purl.org/net/cito/isDiscussedBy> ?uri. ?topic rdf:type skos:Concept. ?topic rdfs:label ?value }");
 		GRAMSCI_FACET_QUERIES.put("isShownAt_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri dct:type <http://purl.org/gramsciproject/vocab/Nota>. ?uri edm:isShownAt ?value.}");
 		GRAMSCI_FACET_QUERIES.put("quaderno_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri dct:type <http://purl.org/gramsciproject/vocab/Nota>. ?uri dct:isPartOf ?q. ?q dct:type gramsci:Quaderno. ?q rdfs:label ?value.}");
-	}
+		GRAMSCI_FACET_QUERIES.put("nome_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value where { graph <http://data.gramsciproject.org/nomi/annotations> { ?part dct:isPartOf ?dluri. ?part <http://purl.org/gramsciproject/vocab/corresponsTo> ?v. } graph <http://data.gramsciproject.org/nomi/> { ?v skos:prefLabel ?value. } ?uri edm:isShownAt ?dluri. ?uri dct:type gramsci:Nota. }");
+	}	
+	
+	
+		
+		
 	
 	private static final String[] GRAMSCI_ENTITIES_BLACK_LIST = {"http://it.wikipedia.org/wiki/Comitato_Olimpico_Internazionale", "http://it.wikipedia.org/wiki/Cio_%28citt%C3%A0%29","http://it.wikipedia.org/wiki/ISO_639-3"};
 	private static ArrayList<String> GRAMSCI_TAGS_BLACK_LIST = new ArrayList<String>() {{ add("CIO"); add("ISO 639-3"); add("2C-B"); add("Annot"); add("ABMA"); add("Abio"); add("Chief Information Officer"); add("ABC"); add("Compagnia di intervento operativo");}};

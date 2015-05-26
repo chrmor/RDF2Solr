@@ -178,11 +178,11 @@ public class DM2EIndexingConfiguration extends Configuration {
 	//private static String namedGraphToQuery = "<http://data.dm2e.eu/data/dataset/cjh/lbilibrary/20141126124859870>";
 	//private static String namedGraphToQuery = "<http://data.dm2e.eu/data/dataset/cjh/lbiarchive/20141126124504174>";
 	//private static String namedGraphToQuery = "<http://data.dm2e.eu/data/dataset/brandeis/scwp/20150107214355089>";
-	//private static String namedGraphToQuery = "<http://data.dm2e.eu/data/dataset/bbaw/dta/20141209170514098>";
+	private static String namedGraphToQuery = "<http://data.dm2e.eu/data/dataset/bbaw/dta/20141209170514098>";
 	//private static String namedGraphToQuery = "<http://data.dm2e.eu/data/dataset/bas/codsupra/20150109170547566>";
 	//private static String namedGraphToQuery = "<http://data.dm2e.eu/data/dataset/ub-ffm/mshebr/20140829145221395>";
 	//private static String namedGraphToQuery = "<http://data.dm2e.eu/data/dataset/ub-ffm/msma/20150108181637060>";
-	private static String namedGraphToQuery = "<http://data.dm2e.eu/data/dataset/uber/dingler/20140909215957962>";
+	//private static String namedGraphToQuery = "<http://data.dm2e.eu/data/dataset/uber/dingler/20140909215957962>";
 	
 	//private static String langFilter = "FILTER(lang(?value)='en')";
 	private static String langFilter = "";
@@ -209,19 +209,39 @@ public class DM2EIndexingConfiguration extends Configuration {
 	}
 	
 	private static HashMap<String, ArrayList<String>> PUNDIT_ANNOTATIONS_QUERIES = new HashMap<String, ArrayList<String>>();
+	private static String DatasetAnnotationsFilter = "";
 	static {
-//		PUNDIT_ANNOTATIONS_QUERIES.put("annotated_with_place_ss", new ArrayList<String>() {{
-//									add("select distinct ?uri ?value where { ?ann <http://www.openannotation.org/ns/hasBody> ?graph. graph ?graph { ?frag <http://purl.org/net7/korbo/item/73666> ?v. } ?ann <http://purl.org/pundit/ont/ao#items> ?itemsGraph. graph ?itemsGraph { ?frag  <http://purl.org/dc/terms/isPartOf> ?uri.  ?v <http://www.w3.org/2000/01/rdf-schema#label> ?value.  }}");
-//									}});
-//		PUNDIT_ANNOTATIONS_QUERIES.put("annotated_with_person_ss", new ArrayList<String>() {{
-//			add("select distinct ?uri ?value where { ?ann <http://www.openannotation.org/ns/hasBody> ?graph. graph ?graph { ?frag <http://purl.org/net7/korbo/item/73667> ?v. } ?ann <http://purl.org/pundit/ont/ao#items> ?itemsGraph. graph ?itemsGraph { ?frag  <http://purl.org/dc/terms/isPartOf> ?uri.  ?v <http://www.w3.org/2000/01/rdf-schema#label> ?value.  }}");
-//			}});
+		if (namedGraphToQuery.equals("<http://data.dm2e.eu/data/dataset/brandeis/scwp/20150107214355089>")) {
+			DatasetAnnotationsFilter = "FILTER regex(str(?uri),'bir-test.unet.brandeis.edu','i')";
+		} else if (namedGraphToQuery.equals("<http://data.dm2e.eu/data/dataset/bbaw/dta/20141209170514098>")) {
+			DatasetAnnotationsFilter = "FILTER regex(str(?uri),'media.dwds.de','i')";
+		} else if (namedGraphToQuery.equals("<http://data.dm2e.eu/data/dataset/gei/gei-digital/20140830013040893>")) {
+			DatasetAnnotationsFilter = "FILTER regex(str(?uri),'gei-digital.gei.de','i')";
+		} else if (namedGraphToQuery.equals("<http://data.dm2e.eu/data/dataset/ecorr/burckhardtsource/20150114171613721>")) {
+			DatasetAnnotationsFilter = "";
+		}
+		if (namedGraphToQuery.equals("<http://data.dm2e.eu/data/dataset/brandeis/scwp/20150107214355089>") 
+				|| namedGraphToQuery.equals("<http://data.dm2e.eu/data/dataset/bbaw/dta/20141209170514098>") 
+				|| namedGraphToQuery.equals("<http://data.dm2e.eu/data/dataset/gei/gei-digital/20140830013040893>") 
+				|| namedGraphToQuery.equals("<http://data.dm2e.eu/data/dataset/ecorr/burckhardtsource/20150114171613721>")) {
+			
+			PUNDIT_ANNOTATIONS_QUERIES.put("annotated_with_place_ss", new ArrayList<String>() {{
+				add("select distinct ?uri ?value where { ?ann <http://www.openannotation.org/ns/hasBody> ?graph. graph ?graph { ?frag <http://purl.org/net7/korbo/item/73666> ?v. } ?ann <http://purl.org/pundit/ont/ao#items> ?itemsGraph. graph ?itemsGraph { ?frag  <http://purl.org/dc/terms/isPartOf> ?uri.  ?v <http://www.w3.org/2000/01/rdf-schema#label> ?value. " + DatasetAnnotationsFilter + "}}");
+				}});
+				PUNDIT_ANNOTATIONS_QUERIES.put("annotated_with_person_ss", new ArrayList<String>() {{
+					add("select distinct ?uri ?value where { ?ann <http://www.openannotation.org/ns/hasBody> ?graph. graph ?graph { ?frag <http://purl.org/net7/korbo/item/73667> ?v. } ?ann <http://purl.org/pundit/ont/ao#items> ?itemsGraph. graph ?itemsGraph { ?frag  <http://purl.org/dc/terms/isPartOf> ?uri.  ?v <http://www.w3.org/2000/01/rdf-schema#label> ?value. " + DatasetAnnotationsFilter + " }}");
+				}});			
+		}
+		
+		
 	}
 	
 	private static HashSet<String> PUNDIT_FACETS_QUERIES = new HashSet<String>();
 	static {
 		if (namedGraphToQuery.equals("<http://data.dm2e.eu/data/dataset/ecorr/burckhardtsource/20150114171613721>")) {
 			PUNDIT_FACETS_QUERIES.add("select distinct ?uri where { graph " + namedGraphToQuery + " { ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri. ?agg <http://onto.dm2e.eu/schemas/dm2e/hasAnnotatableVersionAt> annotatedObject }}");
+		} else if (namedGraphToQuery.equals("<http://data.dm2e.eu/data/dataset/brandeis/scwp/20150107214355089>")){
+			PUNDIT_FACETS_QUERIES.add("select distinct ?uri where { graph " + namedGraphToQuery + " { ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?uri. ?agg <http://www.europeana.eu/schemas/edm/object> annotatedObject. }}");
 		}
 		PUNDIT_FACETS_QUERIES.add("select distinct ?uri where { graph " + namedGraphToQuery + " { ?agg <http://www.europeana.eu/schemas/edm/aggregatedCHO> ?page. ?agg <http://onto.dm2e.eu/schemas/dm2e/hasAnnotatableVersionAt> annotatedObject. ?page <http://purl.org/dc/terms/isPartOf> ?uri }}");
 	}
