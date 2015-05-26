@@ -31,7 +31,7 @@ public class GramsciMediaIndexingConfigutation  extends Configuration{
 	
 	static {
 		GRAMSCI_FACET_QUERIES.put("title_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dct:title ?value. }");
-		GRAMSCI_FACET_QUERIES.put("description_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dc:description ?value. }");
+		GRAMSCI_FACET_QUERIES.put("description_t", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dc:description ?value. }");
 		GRAMSCI_FACET_QUERIES.put("type_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dc:type ?value. }");
 		GRAMSCI_FACET_QUERIES.put("ctype_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri edm:type ?value. }");
 		GRAMSCI_FACET_QUERIES.put("language_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value from <http://data.gramsciproject.org/media/> where {?uri dc:language ?value. }");
