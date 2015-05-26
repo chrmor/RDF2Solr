@@ -28,6 +28,15 @@ public class Utils {
 		out.close();
 	}
 	
+	public static void writeToFile(String string, String filePath) throws IOException {
+
+		Writer out = new BufferedWriter(new FileWriter(new File(filePath),false));
+		out.write(string);
+		out.flush();
+		out.close();
+		
+	}
+	
 	public static void writeToLog(String string) throws IOException {
 
 		Writer out = new BufferedWriter(new FileWriter(new File(LOG_OUTPUT),true));
