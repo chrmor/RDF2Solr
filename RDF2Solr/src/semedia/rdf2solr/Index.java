@@ -162,6 +162,7 @@ public class Index {
 									Set<String> punditFacetsQueries = configuration.getPunditFacetsQueries();
 									for (String query : punditFacetsQueries) {
 										query = query.replaceAll("annotatedObject", "<" + uri + ">");
+										System.out.println(query);
 										indexByQuery(query, conn, solrDocs, field, value.stringValue());
 									}
 									HashMap<String, String> annotatedSubItemsQueries = configuration.getAnnotatedSubitemsQueries();
