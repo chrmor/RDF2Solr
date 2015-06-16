@@ -10,11 +10,9 @@ import java.util.Set;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
-import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
@@ -30,13 +28,7 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.http.HTTPRepository;
 
 import semedia.rdf2solr.indexconfs.Configuration;
-import semedia.rdf2solr.indexconfs.DM2EIndexingConfiguration;
-import semedia.rdf2solr.indexconfs.DM2EVMIndexingConfiguration;
-import semedia.rdf2solr.indexconfs.GramsciDictionaryIndexingConfigutation;
-import semedia.rdf2solr.indexconfs.GramsciMediaIndexingConfigutation;
 import semedia.rdf2solr.indexconfs.GramsciNomiIndexingConfiguration;
-import semedia.rdf2solr.indexconfs.GramsciQuaderniIndexingConfiguration;
-import semedia.rdf2solr.indexconfs.WABOntologyIndexingConfig;
 
 public class Index {
 
@@ -142,6 +134,8 @@ public class Index {
 					}
 				}
 				
+				
+				//PUNDIT ONLY DO NOT MODIFY
 				if (configuration.getPunditQueries() != null) {
 					for (String endpoint : configuration.getPunditQueries().keySet()) {
 						Repository rep = new HTTPRepository(endpoint);
@@ -242,7 +236,7 @@ public class Index {
 			// if no value has been matched skip ... 
 			if (defaultValue==null && bs.getBinding("value") == null) continue;
 			
-			// if the ?field variable has a match ...
+			// if the ?field variable has a match ... 
 			if (bs.getBinding("field")!=null) {
 				Value fv = bs.getBinding("field").getValue();
 				// if the value is a RDF resource we treat it accordingly by checking for rdf:type and adding a special field
@@ -270,7 +264,9 @@ public class Index {
 			
 			String val;
 			if (defaultValue != null) {
+				
 				if (bs.getBinding("subItem")!=null) {
+					//USED IN DM2E - DO NOT MODIFY
 					String subItemUri = bs.getBinding("subItem").getValue().stringValue();
 					val = defaultValue.replaceAll("SUBITEMURI", subItemUri);
 				} else {
@@ -302,19 +298,7 @@ public class Index {
 			} else {
 				// Create a new document
 				doc = new SolrInputDocument();
-				// Assign an incremental ID ...
-				
-//				SolrQuery solrQuery = new SolrQuery();
-//				SolrDocumentList solrRes;
-//				solrQuery.setQuery( "uri_ss:\"" + normalizeWWWUri(uri) + "\"");
-//				solrRes = server.query( solrQuery ).getResults();
-//				if (solrRes.isEmpty()) {
-//					doc.addField("id", id++);	
-//				} else {
-//					int existingId = Integer.parseInt(((String)solrRes.get(0).getFieldValue("id")));
-//					doc.addField("id", existingId);
-//				}
-				
+				// Assign an incremental ID ...				
 				if (configuration.getUseUrisAsIds()) {
 					doc.addField("id", uri);
 				} else {
@@ -326,7 +310,7 @@ public class Index {
 				// Add the URI field (mandatory) ...
 				doc.addField("uri_ss", normalizeWWWUri(uri));
 			
-				//TODO: togliere: quete informazioni vanno messe ni DATI!
+				//TODO: togliere: queste informazioni vanno messe ni DATI!
 				if (uri.contains("gramsciproject.org/quaderni")) {
 					String quaderno = normalizeWWWUri(uri).split("quaderno/")[1].split("/nota")[0].replace("10-II", "10.5");
 					quaderno = quaderno.replace("10-I", "10");
@@ -345,6 +329,13 @@ public class Index {
 			if (field.equals("text")) {
 				doc.setField(field, val, 1.0f);
 			} else if (configuration.getTags_black_list()==null || !configuration.getTags_black_list().contains(val)) {
+				
+				//IF EXISTS ?count THEN val = {"value":val, "count":?count}
+				if (bs.getBinding("count")!=null) {
+					String count = bs.getBinding("count").getValue().stringValue();
+					val = "{\"value\":\"" + val + "\",\"count\":\"" + count + "\"}";
+				}
+				
 				if (field.endsWith("_s")) {
 					doc.setField(field, val, 1.0f);
 				} else {
