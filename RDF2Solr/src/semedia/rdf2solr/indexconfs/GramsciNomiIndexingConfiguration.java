@@ -29,6 +29,7 @@ public class GramsciNomiIndexingConfiguration extends Configuration {
 		// GRAMSCI_FACET_QUERIES.put("nome_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value where { graph <http://data.gramsciproject.org/nomi/annotations/> { ?part dct:isPartOf ?dluri. ?part <http://purl.org/gramsciproject/vocab/correspondsTo> ?v. } graph <http://data.gramsciproject.org/nomi/> { ?v skos:prefLabel ?value. } ?uri edm:isShownAt ?dluri. ?uri dct:type gramsci:Nota. }");
 		GRAMSCI_FACET_QUERIES.put("nome_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value where { graph <http://data.gramsciproject.org/nomi/> { ?uri rdf:type foaf:Person. ?uri skos:prefLabel ?value }}");
 		GRAMSCI_FACET_QUERIES.put("quaderno_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value where { graph <http://data.gramsciproject.org/nomi/annotations/> { ?f gramsci:correspondsTo ?uri. ?f dct:isPartOf ?dlUri. } ?nota edm:isShownAt ?dlUri. ?nota dct:isPartOf ?q. ?q rdfs:label ?value.}");
+		GRAMSCI_FACET_QUERIES.put("quaderno_count_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value (COUNT(distinct ?nota) as ?count) where { graph <http://data.gramsciproject.org/nomi/annotations/> { ?frag gramsci:correspondsTo ?uri. ?frag dct:isPartOf ?dluri. } ?nota edm:isShownAt ?dluri. ?nota dct:isPartOf ?quaderno. ?quaderno rdfs:label ?value.} GROUP BY ?uri ?value");
 	}							
 	
 	private static final String[] GRAMSCI_ENTITIES_BLACK_LIST = {"http://it.wikipedia.org/wiki/Comitato_Olimpico_Internazionale", "http://it.wikipedia.org/wiki/Cio_%28citt%C3%A0%29","http://it.wikipedia.org/wiki/ISO_639-3"};
