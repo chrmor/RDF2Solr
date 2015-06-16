@@ -34,6 +34,7 @@ import semedia.rdf2solr.indexconfs.DM2EIndexingConfiguration;
 import semedia.rdf2solr.indexconfs.DM2EVMIndexingConfiguration;
 import semedia.rdf2solr.indexconfs.GramsciDictionaryIndexingConfigutation;
 import semedia.rdf2solr.indexconfs.GramsciMediaIndexingConfigutation;
+import semedia.rdf2solr.indexconfs.GramsciNomiIndexingConfiguration;
 import semedia.rdf2solr.indexconfs.GramsciQuaderniIndexingConfiguration;
 import semedia.rdf2solr.indexconfs.WABOntologyIndexingConfig;
 
@@ -75,8 +76,9 @@ public class Index {
 
 		
 		//Configuration conf = new DM2EIndexingConfiguration();
-		Configuration conf = new GramsciQuaderniIndexingConfiguration();
+		//Configuration conf = new GramsciQuaderniIndexingConfiguration();
 		//Configuration conf = new GramsciMediaIndexingConfigutation();
+		Configuration conf = new GramsciNomiIndexingConfiguration();
 		
 		//Configuration conf = new GramsciDictionaryIndexingConfigutation();
 		Index index = new Index(conf);
@@ -325,7 +327,7 @@ public class Index {
 				doc.addField("uri_ss", normalizeWWWUri(uri));
 			
 				//TODO: togliere: quete informazioni vanno messe ni DATI!
-				if (uri.contains("gramsciproject.org")) {
+				if (uri.contains("gramsciproject.org/quaderni")) {
 					String quaderno = normalizeWWWUri(uri).split("quaderno/")[1].split("/nota")[0].replace("10-II", "10.5");
 					quaderno = quaderno.replace("10-I", "10");
 					String nota = normalizeWWWUri(uri).split("nota/")[1].split("%20")[0];
