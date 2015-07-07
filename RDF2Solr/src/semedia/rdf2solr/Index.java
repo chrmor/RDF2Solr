@@ -331,7 +331,12 @@ public class Index {
 			} else if (configuration.getTags_black_list()==null || !configuration.getTags_black_list().contains(val)) {
 				
 				//IF EXISTS ?count THEN val = {"value":val, "count":?count}
-				if (bs.getBinding("count")!=null) {
+				if (bs.getBinding("count") != null && bs.getBinding("label") != null && bs.getBinding("title") != null) {
+					String count = bs.getBinding("count").getValue().stringValue();
+					String title = bs.getBinding("title").getValue().stringValue();
+					String label = bs.getBinding("label").getValue().stringValue();
+					val = "{\"value\": \"" + val + "\", \"title\": \"" + title + "\", \"label\": \"" + label + "\", \"count\":\"" + count + "\"}";
+				} else if (bs.getBinding("count") != null) {
 					String count = bs.getBinding("count").getValue().stringValue();
 					val = "{\"value\":\"" + val + "\",\"count\":\"" + count + "\"}";
 				}
