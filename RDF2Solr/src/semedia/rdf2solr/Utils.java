@@ -107,5 +107,26 @@ public class Utils {
 	public static String stripHTMLTags(String html) {
 		return html.replaceAll("\\<.*?>","");
 	}
-
+	
+    public static int ToArabic(String number) {
+        if (number.isEmpty()) return 0;
+        if (number.startsWith("M")) return 1000 + ToArabic(number.substring(1));
+        if (number.startsWith("CM")) return 900 + ToArabic(number.substring(2));
+        if (number.startsWith("D")) return 500 + ToArabic(number.substring(1));
+        if (number.startsWith("CD")) return 400 + ToArabic(number.substring(2));
+        if (number.startsWith("C")) return 100 + ToArabic(number.substring(1));
+        if (number.startsWith("XC")) return 90 + ToArabic(number.substring(2));
+        if (number.startsWith("L")) return 50 + ToArabic(number.substring(1));
+        if (number.startsWith("XL")) return 40 + ToArabic(number.substring(2));
+        if (number.startsWith("X")) return 10 + ToArabic(number.substring(1));
+        if (number.startsWith("IX")) return 9 + ToArabic(number.substring(2));
+        if (number.startsWith("V")) return 5 + ToArabic(number.substring(1));
+        if (number.startsWith("IV")) return 4 + ToArabic(number.substring(2));
+        if (number.startsWith("I")) return 1 + ToArabic(number.substring(1));	
+        return 0;
+    }
+    
+    public static void main(String[] args) {
+		System.out.println(ToArabic("II"));
+	}
 }

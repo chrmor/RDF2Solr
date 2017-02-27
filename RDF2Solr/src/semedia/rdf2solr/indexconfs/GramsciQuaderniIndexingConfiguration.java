@@ -8,9 +8,10 @@ public class GramsciQuaderniIndexingConfiguration extends Configuration {
 	/**
 	 * GramsciSource configuration
 	 */
-	// private static final String SOLR_SERVER = "http://localhost:8983/solr/";
+	
 	//private static final String GRAMSCI_SESAME_URL = "http://metasound.dibet.univpm.it:8080/openrdf-sesame/repositories/";
 	
+	//private static final String SOLR_SERVER = "http://localhost:8983/solr/";
 	private static final String SOLR_SERVER = "http://gramsciproject.org:8080/solr-gramsci-quaderni/";	
 	private static final String GRAMSCI_SESAME_URL = "http://gramsciproject.org:8080/openrdf-sesame/repositories/";		
 	private static final String GRAMSCI_SESAME_REPOSITORY_NAME = "gramsci-native";
@@ -28,7 +29,7 @@ public class GramsciQuaderniIndexingConfiguration extends Configuration {
 	private static final String[] GRAMSCI_INDEXING_QUERIES = {	
 		//GRAMSCI_PREFIXES + "select distinct ?uri ?field ?value where {?uri <http://purl.org/spar/cito/mentions> ?entity. ?entity ?field ?value. FILTER (?field=<http://purl.org/dc/elements/1.1/type>)}",
 		//GRAMSCI_PREFIXES + "select distinct ?uri ?field ?value where {?uri ?field ?value. FILTER (?value=<http://purl.org/gramscisource/ont#Nota> || ?value=skos:Concept) FILTER (?field=rdf:type)}",
-		GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri dct:type gramsci:Nota. ?uri <http://purl.org/dc/elements/1.1/description> ?value. }",
+		GRAMSCI_PREFIXES + "select distinct ?uri ?value where { ?uri dct:type gramsci:Nota. graph <http://data.gramsciproject.org/quaderni/html/> {?uri <http://purl.org/gramsciproject/vocab/HTMLContent> ?value.} }",
 		
 		// - GRAMSCI_PREFIXES + "select distinct ?uri ?field ?value where {?uri dct:type gramsci:Nota. ?uri ?field ?value. FILTER(?field!=<http://purl.org/dc/elements/1.1/description>) FILTER (isLiteral(?value))}",
 		//GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri rdf:type skos:Concept. ?uri <http://purl.org/dc/terms/description> ?value. }",
@@ -57,8 +58,21 @@ public class GramsciQuaderniIndexingConfiguration extends Configuration {
 		GRAMSCI_FACET_QUERIES.put("topic_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri dct:type <http://purl.org/gramsciproject/vocab/Nota>. ?topic <http://purl.org/net/cito/isDiscussedBy> ?uri. ?topic rdf:type skos:Concept. ?topic rdfs:label ?value }");
 		GRAMSCI_FACET_QUERIES.put("isShownAt_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri dct:type <http://purl.org/gramsciproject/vocab/Nota>. ?uri edm:isShownAt ?value.}");
 		GRAMSCI_FACET_QUERIES.put("quaderno_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri dct:type <http://purl.org/gramsciproject/vocab/Nota>. ?uri dct:isPartOf ?q. ?q dct:type gramsci:Quaderno. ?q rdfs:label ?value.}");
+		GRAMSCI_FACET_QUERIES.put("quaderno_struct_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value ?title where {?uri dct:type <http://purl.org/gramsciproject/vocab/Nota>. ?uri dct:isPartOf ?q. ?q dct:type gramsci:Quaderno. ?q rdfs:label ?value. ?q dc:title ?title.}");
 		GRAMSCI_FACET_QUERIES.put("nome_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value where { graph <http://data.gramsciproject.org/nomi/annotations/> { ?part dct:isPartOf ?dluri. ?part <http://purl.org/gramsciproject/vocab/correspondsTo> ?v. } graph <http://data.gramsciproject.org/nomi/> { ?v skos:prefLabel ?value. } ?uri edm:isShownAt ?dluri. ?uri dct:type gramsci:Nota. }");
+		//GRAMSCI_FACET_QUERIES.put("nome_xpointer_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value (group_concat(distinct ?part;separator=\"; \") as ?parts) where { graph <http://data.gramsciproject.org/nomi/annotations/> { ?part dct:isPartOf ?dluri. ?part <http://purl.org/gramsciproject/vocab/correspondsTo> ?v. } graph <http://data.gramsciproject.org/nomi/> { ?v skos:prefLabel ?value. } ?uri edm:isShownAt ?dluri. ?uri dct:type gramsci:Nota. } GROUP BY ?uri ?value");
+		
+		GRAMSCI_FACET_QUERIES.put("grafie_xpointer_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value ?nome (group_concat(distinct ?part;separator=\"; \") as ?parts) where { graph <http://data.gramsciproject.org/nomi/annotations/> { ?part dct:isPartOf ?dluri. ?part <http://purl.org/gramsciproject/vocab/correspondsTo> ?v. ?part rdfs:label ?value. } graph <http://data.gramsciproject.org/nomi/> { ?v skos:prefLabel ?nome. } ?uri edm:isShownAt ?dluri. ?uri dct:type gramsci:Nota. } GROUP BY ?uri ?value ?nome");
+		GRAMSCI_FACET_QUERIES.put("grafia_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value where { graph <http://data.gramsciproject.org/nomi/annotations/> { ?frag gramsci:correspondsTo ?nome. ?frag dct:isPartOf ?dluri. ?frag rdfs:label ?value.} ?uri edm:isShownAt ?dluri. }");
+		
+		GRAMSCI_FACET_QUERIES.put("aggettivo_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value where { graph <http://data.gramsciproject.org/nomi/annotations/> { ?frag gramsci:derivedFrom ?nome. ?frag dct:isPartOf ?dluri. ?frag rdfs:label ?value.} ?uri edm:isShownAt ?dluri. }");
+		GRAMSCI_FACET_QUERIES.put("aggettivi_xpointer_ss", GRAMSCI_PREFIXES + "select distinct ?uri ?value ?nome (group_concat(distinct ?part;separator=\"; \") as ?parts) where { graph <http://data.gramsciproject.org/nomi/annotations/> { ?part dct:isPartOf ?dluri. ?part <http://purl.org/gramsciproject/vocab/derivedFrom> ?v. ?part rdfs:label ?value. } graph <http://data.gramsciproject.org/nomi/> { ?v skos:prefLabel ?nome. } ?uri edm:isShownAt ?dluri. ?uri dct:type gramsci:Nota. } GROUP BY ?uri ?value ?nome");
+		
 		GRAMSCI_FACET_QUERIES.put("title_s", GRAMSCI_PREFIXES + "select distinct ?uri ?value where {?uri dct:type <http://purl.org/gramsciproject/vocab/Nota>. ?uri dc:title ?value }");
+		GRAMSCI_FACET_QUERIES.put("fulltext_t", GRAMSCI_PREFIXES + "select distinct ?uri ?value where { ?uri dct:type gramsci:Nota. graph <http://data.gramsciproject.org/quaderni/texts/> {?uri <http://purl.org/dc/elements/1.1/description> ?value.} }");
+		
+		
+		
 	}	
 	
 	

@@ -29,6 +29,8 @@ import org.openrdf.repository.http.HTTPRepository;
 
 import semedia.rdf2solr.indexconfs.Configuration;
 import semedia.rdf2solr.indexconfs.GramsciNomiIndexingConfiguration;
+import semedia.rdf2solr.indexconfs.GramsciQuaderniIndexingConfiguration;
+import semedia.rdf2solr.indexconfs.WABOntologyIndexingConfig;
 
 public class Index {
 
@@ -38,6 +40,7 @@ public class Index {
 	//private static final String AJAX_SOLR_CONF_HTML = "/Users/christianmorbidoni/ajax-solr-master/examples/rdf/index.html";
 
 	private static final int MAX_LENGTH_FIELDS = 4000;
+	private static final boolean LIMIT_FIELDS_LENGTH = false;
 	private Configuration configuration;
 	private SolrServer server;
 	private Repository rep;
@@ -71,8 +74,10 @@ public class Index {
 		//Configuration conf = new GramsciQuaderniIndexingConfiguration();
 		//Configuration conf = new GramsciMediaIndexingConfigutation();
 		Configuration conf = new GramsciNomiIndexingConfiguration();
-		
 		//Configuration conf = new GramsciDictionaryIndexingConfigutation();
+		//Configuration conf = new WABOntologyIndexingConfig();
+		
+		
 		Index index = new Index(conf);
 		//Index index = new Index(WAB_CONFIGURATION);
 		if (index.configuration.getResetIndex()) {
@@ -285,7 +290,7 @@ public class Index {
 			}
 			
 			
-			if (val.length() > MAX_LENGTH_FIELDS) {
+			if (LIMIT_FIELDS_LENGTH && val.length() > MAX_LENGTH_FIELDS) {
 				val = val.substring(0, MAX_LENGTH_FIELDS) + "...";
 			}
 			
@@ -310,13 +315,21 @@ public class Index {
 				// Add the URI field (mandatory) ...
 				doc.addField("uri_ss", normalizeWWWUri(uri));
 			
-				//TODO: togliere: queste informazioni vanno messe ni DATI!
-				if (uri.contains("gramsciproject.org/quaderni")) {
+				//TODO: togliere: queste informazioni vanno messe nei DATI!
+				if (uri.contains("gramsciproject.org/quaderno")) {
 					String quaderno = normalizeWWWUri(uri).split("quaderno/")[1].split("/nota")[0].replace("10-II", "10.5");
 					quaderno = quaderno.replace("10-I", "10");
-					String nota = normalizeWWWUri(uri).split("nota/")[1].split("%20")[0];
 					doc.addField("quaderno_f", Float.parseFloat(quaderno));
-					doc.addField("nota_i", Integer.parseInt(nota));	
+					String[] pieces = normalizeWWWUri(uri).split("nota/")[1].split("%20");
+					String nota = pieces[0];
+					doc.addField("nota_i", Integer.parseInt(nota));
+					if (pieces.length >1) {
+						String subnotaRoman = normalizeWWWUri(uri).split("nota/")[1].split("%20")[1];
+						int subNotaInt = Utils.ToArabic(subnotaRoman);
+						doc.addField("subnota_i", subNotaInt);
+					}
+					
+					
 				}
 				
 				// store the doc in the buffer ...
@@ -336,9 +349,26 @@ public class Index {
 					String title = bs.getBinding("title").getValue().stringValue();
 					String label = bs.getBinding("label").getValue().stringValue();
 					val = "{\"value\": \"" + val + "\", \"title\": \"" + title + "\", \"label\": \"" + label + "\", \"count\":\"" + count + "\"}";
+				} else if (bs.getBinding("title") != null) {
+					String count = bs.getBinding("title").getValue().stringValue();
+					val = "{\"value\":\"" + val + "\",\"title\":\"" + count + "\"}";
+				} else if (bs.getBinding("count") != null && bs.getBinding("qtitle") != null) {
+					String count = bs.getBinding("count").getValue().stringValue();
+					String qtitle = bs.getBinding("qtitle").getValue().stringValue();
+					val = "{\"value\":\"" + val + "\",\"count\":\"" + count + "\",\"qtitle\":\"" + qtitle + "\"}";
 				} else if (bs.getBinding("count") != null) {
 					String count = bs.getBinding("count").getValue().stringValue();
 					val = "{\"value\":\"" + val + "\",\"count\":\"" + count + "\"}";
+				} else if (bs.getBinding("parts") != null) {
+					String parts = bs.getBinding("parts").getValue().stringValue();
+					if (bs.getBinding("nome") != null) {
+						String nome = bs.getBinding("nome").getValue().stringValue();
+						val = "{\"value\":\"" + val + "\",\"nome\":\"" + nome + "\",\"xpointers\":\"" + parts + "\"}";
+					} else {
+						val = "{\"value\":\"" + val + "\",\"xpointers\":\"" + parts + "\"}";	
+					}
+					
+					
 				}
 				
 				if (field.endsWith("_s")) {
