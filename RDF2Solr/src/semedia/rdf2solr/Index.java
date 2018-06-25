@@ -71,9 +71,9 @@ public class Index {
 
 		
 		//Configuration conf = new DM2EIndexingConfiguration();
-		//Configuration conf = new GramsciQuaderniIndexingConfiguration();
+		Configuration conf = new GramsciQuaderniIndexingConfiguration();
 		//Configuration conf = new GramsciMediaIndexingConfigutation();
-		Configuration conf = new GramsciNomiIndexingConfiguration();
+		//Configuration conf = new GramsciNomiIndexingConfiguration();
 		//Configuration conf = new GramsciDictionaryIndexingConfigutation();
 		//Configuration conf = new WABOntologyIndexingConfig();
 		
